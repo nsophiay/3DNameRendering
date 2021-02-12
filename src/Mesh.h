@@ -39,5 +39,8 @@ class Mesh
 	protected:
 		GLuint VAO, VBO, IBO;
 		GLsizei indexCount; // Just an integer, but recognized by openGL to represent a size.
+		unsigned int verticesNumber;
+		unsigned int* meshIndices;
+		GLfloat* meshVertices;
 };
 

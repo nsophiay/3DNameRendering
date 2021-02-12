@@ -6,7 +6,7 @@ IndependentMesh::IndependentMesh() : Mesh()
     uniformModelLocation = 0;
 }
 
-IndependentMesh::IndependentMesh(IndependentMesh& otherMesh)
+IndependentMesh::IndependentMesh(IndependentMesh& otherMesh) : Mesh(otherMesh)
 {
     modelMatrix = new glm::mat4(1.0f);
     *modelMatrix = *otherMesh.modelMatrix;

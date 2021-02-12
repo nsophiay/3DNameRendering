@@ -6,19 +6,35 @@ Mesh::Mesh()
 	VBO = 0;
 	IBO = 0;
 	indexCount = 0;
+    meshIndices = NULL;
+    verticesNumber = 0;
 }
 
 Mesh::Mesh(Mesh& otherMesh)
 {
-    VAO = otherMesh.VAO;
-    VBO = otherMesh.VBO;
-    IBO = otherMesh.IBO;
+    // First, initalize the values
+    VAO = 0;
+    VBO = 0;
+    IBO = 0;
+    indexCount = 0;
+    meshIndices = NULL;
+    verticesNumber = 0;
+
+    // Then, make a deep copy.
     indexCount = otherMesh.indexCount;
+    verticesNumber = otherMesh.verticesNumber;
+    meshIndices = new unsigned int(*otherMesh.meshIndices);
+    meshVertices = new GLfloat(*otherMesh.meshVertices);
+
+    // Create the mesh to finalize the construction.
+    CreateMesh(meshVertices, meshIndices, verticesNumber, indexCount);
 }
 
 Mesh::~Mesh()
 {
 	ClearMesh();
+    delete meshIndices;
+    delete meshVertices;
 }
 
 void Mesh::CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices)
