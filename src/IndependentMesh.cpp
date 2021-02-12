@@ -6,13 +6,6 @@ IndependentMesh::IndependentMesh() : Mesh()
     uniformModelLocation = 0;
 }
 
-IndependentMesh::IndependentMesh(IndependentMesh& otherMesh) : Mesh(otherMesh)
-{
-    modelMatrix = new glm::mat4(1.0f);
-    *modelMatrix = *otherMesh.modelMatrix;
-    uniformModelLocation = otherMesh.uniformModelLocation;
-}
-
 IndependentMesh::~IndependentMesh()
 {
     // Removing the model matrix from gpu

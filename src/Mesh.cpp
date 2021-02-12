@@ -6,45 +6,17 @@ Mesh::Mesh()
 	VBO = 0;
 	IBO = 0;
 	indexCount = 0;
-    meshIndices = NULL;
-    meshVertices = NULL;
-    verticesNumber = 0;
-}
-
-Mesh::Mesh(Mesh& otherMesh)
-{
-    // First, initalize the values
-    VAO = 0;
-    VBO = 0;
-    IBO = 0;
-    indexCount = 0;
-    meshIndices = NULL;
-    verticesNumber = 0;
-
-    // Then, make a deep copy.
-    indexCount = otherMesh.indexCount;
-    verticesNumber = otherMesh.verticesNumber;
-    meshIndices = new unsigned int(*otherMesh.meshIndices);
-    meshVertices = new GLfloat(*otherMesh.meshVertices);
-
-    // Create the mesh to finalize the construction.
-    CreateMesh(meshVertices, meshIndices, verticesNumber, indexCount);
 }
 
 Mesh::~Mesh()
 {
 	ClearMesh();
-    delete meshIndices;
-    delete meshVertices;
 }
 
 void Mesh::CreateMesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices)
 {
     // Updating our member variables
     indexCount = numOfIndices;
-    verticesNumber = numOfVertices;
-    meshIndices = indices;
-    meshVertices = vertices;
 
     // Creating our VAO. 1- Amount of arrays and then 2- Where to store the ID of the array.
     // This now creates some stuff in the graphics card and its memory.

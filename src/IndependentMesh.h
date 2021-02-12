@@ -11,10 +11,6 @@ class IndependentMesh : public Mesh
 		/// Creates an Independent Mesh, a mesh that has its own Model Matrix with custom transformations attached to it.
 		/// </summary>
 		IndependentMesh();
-		/// <summary>
-		/// Creates an Independent Mesh, a mesh that has its own Model Matrix with custom transformations attached to it.
-		/// </summary>
-		IndependentMesh(IndependentMesh& otherMesh);
 		~IndependentMesh();
 
 		/// <summary>
