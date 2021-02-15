@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-	
+
 	// Creating grid
 	createGrid();
 	Shader gridShader = Shader("shader.vs", "shader.fs");
@@ -74,12 +74,12 @@ int main(int argc, char* argv[])
 		gridShader.use();
 
 		glm::mat4 model(1.0f);
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 1.0f));
 		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -1.0f));
 		model = glm::rotate(model, toRadians(45), glm::vec3(1.0f, 0.0f, 0.0f));
 		gridShader.setMatrix4Float("model", &model);
 		gridShader.setMatrix4Float("projection", &projection);
-		meshList[0]->renderMesh(GL_LINES);
+		meshList[0]->RenderMesh(GL_LINES);
 
 		gridShader.free();
 
@@ -146,6 +146,6 @@ void createGrid()
 		}
 	}
 	Mesh* gridObj = new Mesh();
-	gridObj->createMesh(&vertices[0], &indices[0], indices.size(), vertices.size());
+	gridObj->CreateMesh(&vertices[0], &indices[0], indices.size(), vertices.size());
 	meshList.push_back(gridObj);
 }
