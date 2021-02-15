@@ -10,7 +10,6 @@
 #include <GLM/gtc/type_ptr.hpp>
 
 #include "shader.h"
-#include "Grid.h"
 #include "Mesh.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -111,12 +110,41 @@ float toRadians(float deg)
 
 void createGrid()
 {
-	Grid* grid = new Grid(128);
-	
-	std::vector<float> vertices = grid->getVertexArr();
-	std::vector<unsigned int> indices = grid->getIndexArr();
-	unsigned int indexCount = grid->getIndexCount();
+	int squareCount = 128;
+	std::vector<float> vertices;
+	std::vector<unsigned int> indices;
 
+	for (int i = 0; i <= squareCount; i++) {
+		for (int j = 0; j <= squareCount; j++) {
+			float x = (float)j / (float)squareCount;
+			float y = 0;
+			float z = (float)i / (float)squareCount;
+
+			vertices.push_back(x);
+			vertices.push_back(y);
+			vertices.push_back(z);
+		}
+	}
+
+	for (int i = 0; i < squareCount; i++) {
+		for (int j = 0; j < squareCount; j++) {
+			int top = i * (1 + squareCount);
+			int bottom = (i + 1) * (1 + squareCount);
+
+			// Top line
+			indices.push_back(top + j);
+			indices.push_back(top + j + 1);
+			// Right line
+			indices.push_back(top + j + 1);
+			indices.push_back(bottom + j + 1);
+			// Bottom line
+			indices.push_back(bottom + j + 1);
+			indices.push_back(bottom + j);
+			// Left line
+			indices.push_back(bottom + j);
+			indices.push_back(top + j);
+		}
+	}
 	Mesh* gridObj = new Mesh();
 	gridObj->createMesh(&vertices[0], &indices[0], indices.size(), vertices.size());
 	meshList.push_back(gridObj);
