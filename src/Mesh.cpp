@@ -93,6 +93,30 @@ void Mesh::RenderMesh()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void Mesh::RenderMesh(GLenum drawType)
+{
+    // We want to work with our created VAO.
+    glBindVertexArray(VAO);
+    // We indent to show we are working with this VAO from here on.  
+
+    // Binding IBO.
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+
+    // Drawing our triangles.
+    glDrawElements(drawType, // What to draw
+        indexCount, // Count of indices
+        GL_UNSIGNED_INT, // Format of indices
+        0 // Point to the indices, but we dont need it because we have IBO already.
+    );
+
+    // We unbind the VAO.
+    glBindVertexArray(0);
+    // Unbinding the IBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+
+
 void Mesh::RenderMesh(glm::mat4& matrix, GLuint uniformModelLocation)
 {
     // We want to work with our created VAO.

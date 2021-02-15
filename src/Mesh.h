@@ -22,6 +22,9 @@ class Mesh
 		/// Draws the mesh on screen
 		/// </summary>
 		virtual void RenderMesh();
+		
+		// drawType: GL_TRIANGLES, GL_LINES, GL_POINTS
+		virtual void RenderMesh(GLenum drawType);
 		/// <summary>
 		/// Draws the mesh on screen using a custom transformation
 		/// </summary>
