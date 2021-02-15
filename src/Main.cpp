@@ -3,7 +3,7 @@
 #include <string.h>
 #include <vector>
 
-#include <glad/glad.h>	
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -38,11 +38,13 @@ int main(int argc, char* argv[])
 
 	glfwMakeContextCurrent(window);
 
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
 	{
-		std::cout << "Failed to intiliaze GLAD" << std::endl;
+		printf("Error: %s", glewGetErrorString(error));
+		glfwDestroyWindow(window);
 		glfwTerminate();
-		return -1;
+		return 1;
 	}
 
 	glEnable(GL_DEPTH_TEST);
