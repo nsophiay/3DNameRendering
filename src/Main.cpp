@@ -11,47 +11,25 @@
 
 #include "shader.h"
 #include "Mesh.h"
+#include "Window.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 float toRadians(float deg);
 void createGrid();
 
-const int WIDTH = 800, HEIGHT = 600;
+const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
+Window window;
 
 int main(int argc, char* argv[])
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Learn OpenGL", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	GLenum error = glewInit();
-	if (error != GLEW_OK)
-	{
-		printf("Error: %s", glewGetErrorString(error));
-		glfwDestroyWindow(window);
-		glfwTerminate();
-		return 1;
-	}
+	window = Window(WIDTH, HEIGHT);
+	window.initialise();
 
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glViewport(0, 0, WIDTH, HEIGHT);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -64,10 +42,8 @@ int main(int argc, char* argv[])
 	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
 
-	while (!glfwWindowShouldClose(window))
+	while (!window.getShouldClose())
 	{
-		// manage input
-		processInput(window);
 
 		// rendering commands
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -86,7 +62,7 @@ int main(int argc, char* argv[])
 		gridShader.free();
 
 		//check and call events and sawp buffers
-		glfwSwapBuffers(window);
+		window.swapBuffers();
 		glfwPollEvents();
 	}
 
