@@ -146,6 +146,6 @@ void createGrid()
 		}
 	}
 	Mesh* gridObj = new Mesh();
-	gridObj->CreateMesh(&vertices[0], &indices[0], indices.size(), vertices.size());
+	gridObj->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
 	meshList.push_back(gridObj);
 }
