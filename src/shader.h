@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
+#include <GL/glew.h>
 #include <GLM/glm.hpp>
 #include <GLM/gtc/type_ptr.hpp>
 
