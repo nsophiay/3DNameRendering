@@ -26,5 +26,6 @@ public:
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
 	void setMatrix4Float(const std::string& name, glm::mat4* transformMatrix) const;
+	GLuint getLocation(const std::string& name) const;
 
 };

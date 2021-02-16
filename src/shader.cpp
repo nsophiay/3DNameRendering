@@ -113,3 +113,8 @@ void Shader::setMatrix4Float(const std::string& name, glm::mat4* transformMatrix
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(*transformMatrix));
 }
+
+GLuint Shader::getLocation(const std::string& name) const
+{
+	return glGetUniformLocation(ID, name.c_str());
+}

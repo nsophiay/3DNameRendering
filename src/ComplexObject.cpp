@@ -13,6 +13,12 @@ ComplexObject::ComplexObject()
 
 ComplexObject::~ComplexObject()
 {
+	// Clears the objectlist
+	for (int i = 0; i < objectList.size(); i++)
+	{
+		objectList[i]->ClearObject();
+	}
+
 	// Clean up the meshlist.
 	for (int i = 0; i < meshList.size(); i++)
 	{
@@ -32,7 +38,7 @@ ComplexObject::~ComplexObject()
 		objectModelMatrix = NULL;
 	}
 
-	// Clean up the object list.
+	// Destroy the object list.
 	for (int i = 0; i < objectList.size(); i++)
 	{
 		objectList[i]->~ComplexObject();

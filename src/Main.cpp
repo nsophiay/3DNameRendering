@@ -13,19 +13,54 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Window.h"
+#include "IndependentMesh.h"
+#include "ComplexObject.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 float toRadians(float deg);
 void createGrid();
 
+// Character creation methods
+
+/// <summary>
+/// Creates characters representing the first and last letter of each team member's name, and the first and last digit of their student ID.
+/// This then adds those created objects to the object list.
+/// </summary>
+/// <param name="shader">The shader that will be used to render the objects</param>
+void CreateLetters(Shader* shader);
+/// <summary>
+/// Creates the letter J using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter J</returns>
+ComplexObject* CreateLetterJ(GLuint uniformModel);
+/// <summary>
+/// Creates the letter L using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter L</returns>
+ComplexObject* CreateLetterL(GLuint uniformModel);
+
+
+// Global Variables
+
 const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
+std::vector<ComplexObject*> objectList;
 Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
+const float BASE_WORLD_ANGLE = 45.0f;
+float currentWorldAngle = BASE_WORLD_ANGLE;
+float worldRotationIncrement = 0.5f;
+
 
 int main(int argc, char* argv[])
 {
+	// Initializing Global Variables
+	meshList = std::vector<Mesh*>();
+	objectList = std::vector<ComplexObject*>();
+
 	window = Window(WIDTH, HEIGHT);
 	window.initialise();
 
@@ -41,6 +76,9 @@ int main(int argc, char* argv[])
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
+	// Creating the letters
+	CreateLetters(&gridShader);
+
 	while (!window.getShouldClose())
 	{
 
@@ -54,11 +92,31 @@ int main(int argc, char* argv[])
 
 		gridShader.use();
 
+		// Handling rotations
+		// Rotating the entire world dependent on key presses.
+			// We rotate around the X-Axis
+		if (window.getKeys()[GLFW_KEY_RIGHT])
+		{
+			// Anticlockwise rotation
+			currentWorldAngle += worldRotationIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_LEFT])
+		{
+			// Clockwise rotation
+			currentWorldAngle -= worldRotationIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_HOME])
+		{
+			// Reset to default rotation.
+			currentWorldAngle = BASE_WORLD_ANGLE;
+		}
+
+
 		// Model matrix
 		glm::mat4 model(1.0f);
-		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 1.0f));
 		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -1.0f));
-		model = glm::rotate(model, toRadians(45), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 1.0f));
+		model = glm::rotate(model, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 
 		// View matrix
 		glm::mat4 view(1.0f);
@@ -70,6 +128,8 @@ int main(int argc, char* argv[])
 		gridShader.setMatrix4Float("projection", &projection);
 		gridShader.setMatrix4Float("view", &view);
 		meshList[0]->RenderMesh(GL_LINES);
+
+		objectList[0]->RenderObject();
 
 		gridShader.free();
 
@@ -138,4 +198,178 @@ void createGrid()
 	Mesh* gridObj = new Mesh();
 	gridObj->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
 	meshList.push_back(gridObj);
+}
+
+void CreateLetters(Shader* shader) {
+	GLuint modelLocation = shader->getLocation("model");
+
+	// Creating Joel's name and ID object
+
+	ComplexObject* letterJ = CreateLetterJ(modelLocation);
+	ComplexObject* letterL = CreateLetterL(modelLocation);
+
+	// Making the translations so that both letters can be side by side.
+
+	glm::mat4 model = glm::mat4(1.0f);
+
+	// J translate
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 0.0f));
+	letterJ->SetModelMatrix(model, modelLocation);
+
+	// L translate
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+	letterL->SetModelMatrix(model, modelLocation);
+
+	ComplexObject* joelNameAndID = new ComplexObject();
+	joelNameAndID->objectList.push_back(letterJ);
+	joelNameAndID->objectList.push_back(letterL);
+
+	objectList.push_back(joelNameAndID);
+}
+
+ComplexObject* CreateLetterJ(GLuint uniformModel)
+{
+	// First Cube
+   // The center of the screen is 0.0f. It also goes from -1.0 to 1.0.
+   // x, y, z
+	GLfloat vertices[] = {
+		-0.5f, -0.5f, 0.5f, // bottom top left corner, index 0
+		-0.5f, -0.5f, -0.5f, // bottom bottom left corner, index 1
+		0.5f, -0.5f, -0.5f, // bottom bottom right corner, index 2
+		0.5f, -0.5f, 0.5f, // bottom top right corner, index 3
+		-0.5f, 0.5f, 0.5f, // top top left corner, index 4
+		-0.5f, 0.5f, -0.5f, // top bottom left corner, index 5
+		0.5f, 0.5f, -0.5f, // top bottom right corner, index 6
+		0.5f, 0.5f, 0.5f, // top top right corner, index 7
+	};
+
+	// Creating the order of draws for indexed draws.
+	// This uses the position of the vertices in vertices[]. By specifying them in order, we define the drawing order of those points.
+	// So 0,3,1 means draw point at index 0, then at index 3, then at index 1.
+	// Note we are specifying them in counter clockwise order. This is to say to opengl that we are drawing front faces.
+	// We have to draw triangles, because they are the easiest polygon. So each group of 3 ints is a triangle.
+	// We are drawing top triangle, then bottom triangle, with the top triangle having its middle in the top left corner of a face.
+	unsigned int indices[] = {
+		// Left face
+		0, 5, 4,    0, 1, 5,
+		// Front face
+		1, 6, 5,    1, 2, 6,
+		// Right Face
+		2, 7, 6,    2, 3, 7,
+		// Back face
+		3, 4, 7,    3, 0, 4,
+		// Top
+		5, 7, 4,    5, 6, 7,
+		// Bottom
+		1, 3, 0,    1, 2, 3
+	};
+
+	// LETTER J
+
+	// Creating the base of the letter J
+	IndependentMesh* jBase = new IndependentMesh();
+	jBase->CreateMesh(vertices, indices, 24, 36);
+	glm::mat4 model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
+
+	jBase->SetModelMatrix(model, uniformModel);
+
+	// Creating the trunk of the letter J
+	IndependentMesh* jTrunk = new IndependentMesh();
+	jTrunk->CreateMesh(vertices, indices, 24, 36);
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 4.0f, 1.0f));
+
+	jTrunk->SetModelMatrix(model, uniformModel);
+
+	// Creating the paw of the letter J
+	IndependentMesh* jPaw = new IndependentMesh();
+	jPaw->CreateMesh(vertices, indices, 24, 36);
+
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(-2.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	jPaw->SetModelMatrix(model, uniformModel);
+
+	ComplexObject* jLetter = new ComplexObject();
+	jLetter->meshList.push_back(jBase);
+	jLetter->meshList.push_back(jTrunk);
+	jLetter->meshList.push_back(jPaw);
+
+	return jLetter;
+}
+
+ComplexObject* CreateLetterL(GLuint uniformModel)
+{
+	// First Cube
+   // The center of the screen is 0.0f. It also goes from -1.0 to 1.0.
+   // x, y, z
+	GLfloat vertices[] = {
+		-0.5f, -0.5f, 0.5f, // bottom top left corner, index 0
+		-0.5f, -0.5f, -0.5f, // bottom bottom left corner, index 1
+		0.5f, -0.5f, -0.5f, // bottom bottom right corner, index 2
+		0.5f, -0.5f, 0.5f, // bottom top right corner, index 3
+		-0.5f, 0.5f, 0.5f, // top top left corner, index 4
+		-0.5f, 0.5f, -0.5f, // top bottom left corner, index 5
+		0.5f, 0.5f, -0.5f, // top bottom right corner, index 6
+		0.5f, 0.5f, 0.5f, // top top right corner, index 7
+	};
+
+	// Creating the order of draws for indexed draws.
+	// This uses the position of the vertices in vertices[]. By specifying them in order, we define the drawing order of those points.
+	// So 0,3,1 means draw point at index 0, then at index 3, then at index 1.
+	// Note we are specifying them in counter clockwise order. This is to say to opengl that we are drawing front faces.
+	// We have to draw triangles, because they are the easiest polygon. So each group of 3 ints is a triangle.
+	// We are drawing top triangle, then bottom triangle, with the top triangle having its middle in the top left corner of a face.
+	unsigned int indices[] = {
+		// Left face
+		0, 5, 4,    0, 1, 5,
+		// Front face
+		1, 6, 5,    1, 2, 6,
+		// Right Face
+		2, 7, 6,    2, 3, 7,
+		// Back face
+		3, 4, 7,    3, 0, 4,
+		// Top
+		5, 7, 4,    5, 6, 7,
+		// Bottom
+		1, 3, 0,    1, 2, 3
+	};
+
+	// LETTER L
+	glm::mat4 model = glm::mat4(1.0f);
+
+	 // Creating the base of the letter L
+	IndependentMesh* lBase = new IndependentMesh();
+	lBase->CreateMesh(vertices, indices, 24, 36);
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
+
+	lBase->SetModelMatrix(model, uniformModel);
+
+	// Creating the trunk of the letter L
+	IndependentMesh* lTrunk = new IndependentMesh();
+	lTrunk->CreateMesh(vertices, indices, 24, 36);
+	model = glm::mat4(1.0f);
+
+	model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 4.0f, 1.0f));
+
+	lTrunk->SetModelMatrix(model, uniformModel);
+
+	ComplexObject* lLetter = new ComplexObject();
+	lLetter->meshList.push_back(lBase);
+	lLetter->meshList.push_back(lTrunk);
+
+	return lLetter;
 }
