@@ -14,6 +14,8 @@
 #include "Camera.h"
 #include "Window.h"
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
 float toRadians(float deg);
 void createGrid();
 
@@ -79,6 +81,17 @@ int main(int argc, char* argv[])
 
 	glfwTerminate();
 	return 0;
+}
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
 }
 
 float toRadians(float deg)
