@@ -78,8 +78,8 @@ void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, m
 		yaw += x;
 
 		// Keep mouse movement within a certain range
-		if (yaw > 50.0f) yaw = 50.0f;
-		if (yaw < -50.0f) yaw = -50.0f;
+		if (yaw > 180.0f) yaw = 180.0f;
+		if (yaw < 0.0f) yaw = 0.0f;
 
 		update();
 	}
@@ -93,8 +93,8 @@ void Camera::tilt(bool* keys, GLfloat y) { // When the down button is pressed, m
 		pitch += y;
 
 		// Keep mouse movement within a certain range
-		if (pitch > 30.0f) pitch = 30.0f; 
-		if (pitch < -20.0f) pitch = -20.0f;
+		if (pitch > 50.0f) pitch = 50.0f; 
+		if (pitch < -50.0f) pitch = -50.0f;
 
 		update();
 	}
