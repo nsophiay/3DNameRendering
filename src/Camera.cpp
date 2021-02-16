@@ -73,7 +73,7 @@ void Camera::movementFromKeyboard(bool* keys, GLfloat deltatime) { // Configure 
 
 void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, move right and left with the mouse
 
-	if (keys[GLFW_KEY_RIGHT]) {
+	if (keys[GLFW_MOUSE_BUTTON_RIGHT]) {
 		x *= turnSpeed;
 		yaw += x;
 
@@ -88,7 +88,7 @@ void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, m
 
 void Camera::tilt(bool* keys, GLfloat y) { // When the down button is pressed, move up and down with the mouse
 
-	if (keys[GLFW_KEY_DOWN]) {
+	if (keys[GLFW_MOUSE_BUTTON_MIDDLE]) {
 		y *= turnSpeed;
 		pitch += y;
 
