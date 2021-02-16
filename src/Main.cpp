@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-
 	while (!window.getShouldClose())
 	{
 
@@ -74,7 +73,7 @@ int main(int argc, char* argv[])
 
 		gridShader.free();
 
-		//check and call events and sawp buffers
+		//check and call events and swap buffers
 		window.swapBuffers();
 		glfwPollEvents();
 	}
