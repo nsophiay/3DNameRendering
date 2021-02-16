@@ -19,7 +19,7 @@ void createGrid();
 
 const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
-Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
+Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
 
 int main(int argc, char* argv[])
@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
 
 		// View matrix
 		glm::mat4 view(1.0f);
-		view = glm::translate(view, glm::vec3(-1.5f, 0.0f, -1.0f));
 		view = glm::rotate(view, toRadians(-85), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
