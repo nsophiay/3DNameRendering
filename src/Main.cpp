@@ -11,6 +11,7 @@
 
 #include "shader.h"
 #include "Mesh.h"
+#include "Camera.h"
 #include "Window.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -20,6 +21,7 @@ void createGrid();
 
 const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
+Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
 
 int main(int argc, char* argv[])
@@ -30,9 +32,7 @@ int main(int argc, char* argv[])
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
 
 	// Creating grid
 	createGrid();
@@ -41,7 +41,6 @@ int main(int argc, char* argv[])
 	glm::mat4 projection(1.0f);
 	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-
 	while (!window.getShouldClose())
 	{
 
@@ -49,19 +48,32 @@ int main(int argc, char* argv[])
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Camera movement
+		camera.pan(window.getKeys(), window.getDeltaX());
+		camera.tilt(window.getKeys(), window.getDeltaY());
+
 		gridShader.use();
 
+		// Model matrix
 		glm::mat4 model(1.0f);
 		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 1.0f));
 		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -1.0f));
 		model = glm::rotate(model, toRadians(45), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		// View matrix
+		glm::mat4 view(1.0f);
+		view = glm::rotate(view, toRadians(-85), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = camera.calculateViewMatrix() * view;
+
+		// Connect matrices with shaders
 		gridShader.setMatrix4Float("model", &model);
 		gridShader.setMatrix4Float("projection", &projection);
+		gridShader.setMatrix4Float("view", &view);
 		meshList[0]->RenderMesh(GL_LINES);
 
 		gridShader.free();
 
-		//check and call events and sawp buffers
+		//check and call events and swap buffers
 		window.swapBuffers();
 		glfwPollEvents();
 	}
