@@ -74,6 +74,7 @@ int Window::initialise()
 void Window::createCallbacks() {
 	glfwSetKeyCallback(mainWindow, handleKeys); // When a key is pressed in window, handle input
 	glfwSetCursorPosCallback(mainWindow, handleMouse);
+	glfwSetMouseButtonCallback(mainWindow, handleMouseButtons);
 }
 
 void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode) {
@@ -111,6 +112,19 @@ void Window::handleMouse(GLFWwindow* window, double x, double y) {
 	theWindow->lastX = x;
 	theWindow->lastY = y;
 
+}
+
+void Window::handleMouseButtons(GLFWwindow* window, int button, int action, int mods)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	if (button >= 0 && button < 1024) {
+		if (action == GLFW_PRESS) {
+			theWindow->keys[button] = true;
+		}
+		else if (action == GLFW_RELEASE) {
+			theWindow->keys[button] = false;
+		}
+	}
 }
 
 
