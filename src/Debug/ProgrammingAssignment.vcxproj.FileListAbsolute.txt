@@ -1,4 +1,0 @@
-D:\Users\Joel\Documents\GitHub\comp371-w21-12\src\Debug\ProgrammingAssignment.exe
-D:\Users\Joel\Documents\GitHub\comp371-w21-12\src\Debug\ProgrammingAssignment.pdb
-C:\Users\vanos\OneDrive\Desktop\SCHOOL\bitbucket_proj\new_sol\comp371-w21-12\src\Debug\ProgrammingAssignment.exe
-C:\Users\vanos\OneDrive\Desktop\SCHOOL\bitbucket_proj\new_sol\comp371-w21-12\src\Debug\ProgrammingAssignment.pdb
