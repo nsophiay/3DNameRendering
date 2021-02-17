@@ -53,10 +53,29 @@ ComplexObject* CreateNumber2(GLuint uniformModel);
 ComplexObject* CreateNumber4(GLuint uniformModel);
 
 /// <summary>
-/// Creates the letters SA43 using meshes and complex objects.
+/// Creates the letter S using meshes and complex objects.
 /// </summary>
-/// <param name="shader">The shader that will be used to render the objects</param>
-void drawSA43(Shader* shader);
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter S</returns>
+ComplexObject* CreateLetterS(GLuint uniformModel);
+/// <summary>
+/// Creates the letter A using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter A</returns>
+ComplexObject* CreateLetterA(GLuint uniformModel);
+/// <summary>
+/// Creates the number 4 using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the number 4</returns>
+ComplexObject* CreateNumber4alt(GLuint uniformModel);
+/// <summary>
+/// Creates the number 3 using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the number 3</returns>
+ComplexObject* CreateNumber3(GLuint uniformModel);
 
 
 // Global Variables
@@ -173,19 +192,27 @@ int main(int argc, char* argv[])
 		gridShader.setMatrix4Float("view", &view);
 		meshList[0]->RenderMesh(GL_LINES);
 
-
+		// Joel
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -4.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 		objectList[0]->SetModelMatrix(model, 0);
 		objectList[0]->RenderObject();
 
-
+		// Razvan
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(1.0f, 0.1f, -4.0f));
 		model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.2f));
 		objectList[1]->SetModelMatrix(model, 0);
 		objectList[1]->RenderObject();
+
+		// Saffia
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(8.5f, 0.1f, 7.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		model = glm::rotate(model, glm::radians(-135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		objectList[2]->SetModelMatrix(model, 0);
+		objectList[2]->RenderObject();
 
 		gridShader.free();
 
@@ -263,7 +290,9 @@ void createGrid(int squareCount)
 void CreateLetters(Shader* shader) {
 	GLuint modelLocation = shader->getLocation("model");
 
-	// Creating Joel's name and ID object
+	/////////////////////////////////////////
+	// Creating Joel's name and ID object //
+	////////////////////////////////////////
 
 	ComplexObject* letterJ = CreateLetterJ(modelLocation);
 	ComplexObject* letterL = CreateLetterL(modelLocation);
@@ -292,6 +321,10 @@ void CreateLetters(Shader* shader) {
 	
 
 	objectList.push_back(joelNameAndID);
+
+	//////////////////////////////////////////
+	// Creating Razvan's name and ID object //
+	//////////////////////////////////////////
 
 	ComplexObject* letterR = CreateLetterR(modelLocation);
 	ComplexObject* letterP = CreateLetterP(modelLocation);
@@ -322,6 +355,42 @@ void CreateLetters(Shader* shader) {
 	razvanNameAndID->objectList.push_back(number4);
 
 	objectList.push_back(razvanNameAndID);
+
+	//////////////////////////////////////////
+	// Creating Saffia's name and ID object //
+	//////////////////////////////////////////
+
+	ComplexObject* letterS = CreateLetterS(modelLocation);
+	ComplexObject* letterA = CreateLetterA(modelLocation);
+	ComplexObject* four = CreateNumber4alt(modelLocation);
+	ComplexObject* number3 = CreateNumber3(modelLocation);
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, -0.25f, 0.0f));
+	letterS->SetModelMatrix(model, modelLocation);
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 0.98f, 1.0f));
+	letterA->SetModelMatrix(model, modelLocation);
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(9.5f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 0.99f, 1.0f));
+	four->SetModelMatrix(model, modelLocation);
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(9.5f, 0.0f, 0.0f));
+	number3->SetModelMatrix(model, modelLocation);
+
+	ComplexObject* SaffiaNameAndID = new ComplexObject();
+	SaffiaNameAndID->objectList.push_back(letterS);
+	SaffiaNameAndID->objectList.push_back(letterA);
+	SaffiaNameAndID->objectList.push_back(four);
+	SaffiaNameAndID->objectList.push_back(number3);
+
+	objectList.push_back(SaffiaNameAndID);
+
 }
 
 ComplexObject* CreateLetterJ(GLuint uniformModel)
@@ -847,11 +916,9 @@ ComplexObject* CreateNumber4(GLuint uniformModel)
 	return fourNumber;
 }
 
-// Draws the characters SA43
-void drawSA43(Shader* shaders) {
 
-	ComplexObject* all = new ComplexObject();
-
+ComplexObject* CreateLetterS(GLuint uniformModel)
+{
 	unsigned int indices[] = {
 		// front
 		0, 1, 2,
@@ -900,13 +967,10 @@ void drawSA43(Shader* shaders) {
 		1.0, 1.0, 1.0
 	};
 
-	GLuint uniformModel = shaders->getLocation("model");
-
-	///////
-	// S //
-	///////
-
+	// LETTER S
 	ComplexObject* s = new ComplexObject();
+
+	// Creating the base 
 
 	glm::mat4 partModel(1.0f);
 	partModel = glm::scale(partModel, glm::vec3(2.75f, 0.5f, 1.0f));
@@ -941,23 +1005,64 @@ void drawSA43(Shader* shaders) {
 	cubeS5->SetModelMatrix(partModel, uniformModel);
 	s->meshList.push_back(cubeS5);
 
-	all->objectList.push_back(s);
+	return s;
+}
+ComplexObject* CreateLetterA(GLuint uniformModel)
+{
+	unsigned int indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// top
+		3, 2, 6,
+		6, 7, 3
+	};
 
-	glm::mat4 groupModel(1.0f);
-	//groupModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
-	groupModel = glm::rotate(groupModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	groupModel = glm::translate(groupModel, glm::vec3(5.0f, -15.0f, 0.0f));
-	s->SetModelMatrix(groupModel, uniformModel);
 
+	GLfloat vertices[] = {
+		// front
+		-1.0, -1.0,  1.0,
+		1.0, -1.0,  1.0,
+		1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		1.0, -1.0, -1.0,
+		1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
+	};
 
-	///////
-	// A //
-	///////
+	GLfloat cube_colors[] = {
+		// front colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0,
+		// back colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0
+	};
 
+	// LETTER A
 	ComplexObject* a = new ComplexObject();
 
-	partModel = glm::mat4(1.0f); // Matrix for each fragment
-								 // First fragment
+	glm::mat4 partModel(1.0f); 
+	
+	// First fragment
 	partModel = glm::scale(partModel, glm::vec3(2.3f, 0.5f, 1.0f));
 	partModel = glm::translate(partModel, glm::vec3(0.0f, 15.3f, 0.0f));
 	IndependentMesh *cubeA1 = new IndependentMesh();
@@ -992,60 +1097,64 @@ void drawSA43(Shader* shaders) {
 	cubeA4->SetModelMatrix(partModel, uniformModel);
 	a->meshList.push_back(cubeA4);
 
-	all->objectList.push_back(a);
+	return a;
+}
+ComplexObject* CreateNumber3(GLuint uniformModel)
+{
+	unsigned int indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// top
+		3, 2, 6,
+		6, 7, 3
+	};
 
-	groupModel = glm::mat4(1.0f);
-	groupModel = glm::translate(groupModel, glm::vec3(-2.8f, 0.2f, 0.0f));
 
-	a->SetModelMatrix(groupModel, uniformModel);
+	GLfloat vertices[] = {
+		// front
+		-1.0, -1.0,  1.0,
+		1.0, -1.0,  1.0,
+		1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		1.0, -1.0, -1.0,
+		1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
+	};
 
-	///////
-	// 4 //
-	///////
+	GLfloat cube_colors[] = {
+		// front colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0,
+		// back colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0
+	};
 
-	ComplexObject * four = new ComplexObject();
-
-	// First fragment
-	partModel = glm::translate(partModel, glm::vec3(5.3f, 0.0f, 0.0f));
-	partModel = glm::scale(partModel, glm::vec3(1.0f, 1.0f, 1.0f));
-	IndependentMesh *cube41 = new IndependentMesh();
-	cube41->CreateMesh(vertices, indices, 24, 36);
-	cube41->SetModelMatrix(partModel, uniformModel);
-	four->meshList.push_back(cube41);
-
-	// Third fragment
-	partModel = glm::mat4(1.0f);
-	partModel = glm::translate(partModel, glm::vec3(2.0f, 5.7f, 0.0f));
-	partModel = glm::scale(partModel, glm::vec3(0.5f, 2.3f, 1.0f));
-	IndependentMesh *cube42 = new IndependentMesh();
-	cube42->CreateMesh(vertices, indices, 24, 36);
-	cube42->SetModelMatrix(partModel, uniformModel);
-	four->meshList.push_back(cube42);
-
-	// Second fragment
-	partModel = glm::mat4(1.0f);
-	partModel = glm::translate(partModel, glm::vec3(3.5f, 3.0f, -0.1f));
-	partModel = glm::scale(partModel, glm::vec3(2.0f, 0.5f, 1.0f));
-	IndependentMesh *cube43 = new IndependentMesh();
-	cube43->CreateMesh(vertices, indices, 24, 36);
-	cube43->SetModelMatrix(partModel, uniformModel);
-	four->meshList.push_back(cube43);
-
-	all->objectList.push_back(four);
-
-	groupModel = glm::mat4(1.0f);
-	groupModel = glm::translate(groupModel, glm::vec3(0.0f, 0.2f, 0.0f));
-
-	four->SetModelMatrix(groupModel, uniformModel);
-
-	///////
-	// 3 //
-	///////
-
+	// NUMBER 3	
 	ComplexObject * three = new ComplexObject();
 
 	// First fragment
-	partModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 4.45f, 1.0f));
+	glm::mat4 partModel(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.45f, 1.0f));
 	partModel = glm::translate(partModel, glm::vec3(22.0f, 0.78f, 0.0f));
 	IndependentMesh *cube31 = new IndependentMesh();
 	cube31->CreateMesh(vertices, indices, 24, 36);
@@ -1074,21 +1183,87 @@ void drawSA43(Shader* shaders) {
 	cube34->SetModelMatrix(partModel, uniformModel);
 	three->meshList.push_back(cube34);
 
-	all->objectList.push_back(three);
+	return three;
+}
+ComplexObject* CreateNumber4alt (GLuint uniformModel)
+{
+	unsigned int indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// top
+		3, 2, 6,
+		6, 7, 3
+	};
 
-	groupModel = glm::mat4(1.0f);
-	groupModel = glm::translate(groupModel, glm::vec3(0.0f, 0.2f, 0.0f));
 
-	three->SetModelMatrix(groupModel, uniformModel);
+	GLfloat vertices[] = {
+		// front
+		-1.0, -1.0,  1.0,
+		1.0, -1.0,  1.0,
+		1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		1.0, -1.0, -1.0,
+		1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
+	};
 
-	groupModel = glm::mat4(1.0f);
-	groupModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
-	groupModel = glm::rotate(groupModel, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	GLfloat cube_colors[] = {
+		// front colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0,
+		// back colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0
+	};
 
-	all->SetModelMatrix(groupModel, uniformModel);
+	// NUMBER 4
+	ComplexObject * four = new ComplexObject();
 
-	s->RenderObject();
+	// First fragment
+	glm::mat4 partModel(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.45f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(11.0f, 0.8f, 0.0f));
+	IndependentMesh *cube41 = new IndependentMesh();
+	cube41->CreateMesh(vertices, indices, 24, 36);
+	cube41->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube41);
 
-	objectList.push_back(all);
+	// Third fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::translate(partModel, glm::vec3(2.0f, 5.7f, 0.0f));
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 2.3f, 1.0f));
+	IndependentMesh *cube42 = new IndependentMesh();
+	cube42->CreateMesh(vertices, indices, 24, 36);
+	cube42->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube42);
 
+	// Second fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::translate(partModel, glm::vec3(3.5f, 3.0f, -0.1f));
+	partModel = glm::scale(partModel, glm::vec3(2.0f, 0.5f, 1.0f));
+	IndependentMesh *cube43 = new IndependentMesh();
+	cube43->CreateMesh(vertices, indices, 24, 36);
+	cube43->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube43);
+
+	return four;
 }
