@@ -61,13 +61,9 @@ std::vector<ComplexObject*> objectList;
 Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
 const float BASE_WORLD_ANGLE = -5.0f;
-const float BASE_WORLD_Z_POS = 1.0f;
 const float BASE_WORLD_Y_POS = -0.5f;
-const float BASE_WORLD_X_POS = 0.0f;
 float currentWorldAngle = BASE_WORLD_ANGLE;
-float currentXPos = BASE_WORLD_X_POS;
 float currentYPos = BASE_WORLD_Y_POS;
-float currentZpos = BASE_WORLD_Z_POS;
 float worldRotationIncrement = 0.5f;
 float worldPosIncrement = 0.01f;
 
@@ -129,9 +125,7 @@ int main(int argc, char* argv[])
 		{
 			// Reset to default rotation.
 			currentWorldAngle = BASE_WORLD_ANGLE;
-			currentXPos = BASE_WORLD_X_POS;
 			currentYPos = BASE_WORLD_Y_POS;
-			currentZpos = BASE_WORLD_Z_POS;
 		}
 		if (window.getKeys()[GLFW_KEY_UP])
 		{
