@@ -157,6 +157,7 @@ int main(int argc, char* argv[])
 		glm::mat4 view(1.0f);
 		view = glm::translate(view, glm::vec3(0.0f, currentYPos, 0.0f));
 		view = glm::rotate(view, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, toRadians(180), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
 
@@ -168,14 +169,14 @@ int main(int argc, char* argv[])
 
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 2.0f));
+		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -4.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 		objectList[0]->SetModelMatrix(model, 0);
 		objectList[0]->RenderObject();
 
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.1f, 2.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 0.1f, -4.0f));
 		model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.2f));
 		objectList[1]->SetModelMatrix(model, 0);
 		objectList[1]->RenderObject();
@@ -297,15 +298,15 @@ void CreateLetters(Shader* shader) {
 	letterR->SetModelMatrix(model, modelLocation);
 	// P translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
 	letterP->SetModelMatrix(model, modelLocation);
 	// 2 translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-13.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(13.0f, 0.0f, 0.0f));
 	number2->SetModelMatrix(model, modelLocation);
 	// 4 translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-9.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(9.0f, 0.0f, 0.0f));
 	number4->SetModelMatrix(model, modelLocation);
 
 	ComplexObject* razvanNameAndID = new ComplexObject();
@@ -517,7 +518,7 @@ ComplexObject* CreateLetterP(GLuint uniformModel)
 	pTop->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 	
-	model = glm::translate(model, glm::vec3(-2.0f, 4.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 4.5f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 	
 	pTop->SetModelMatrix(model, uniformModel);
@@ -527,7 +528,7 @@ ComplexObject* CreateLetterP(GLuint uniformModel)
 	pTopRight->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-3.0f, 3.15f, 0.0f));
+	model = glm::translate(model, glm::vec3(3.0f, 3.15f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
 
 	pTopRight->SetModelMatrix(model, uniformModel);
@@ -537,7 +538,7 @@ ComplexObject* CreateLetterP(GLuint uniformModel)
 	pTopBottom->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 1.8f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 1.8f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	pTopBottom->SetModelMatrix(model, uniformModel);
@@ -607,7 +608,7 @@ ComplexObject* CreateLetterR(GLuint uniformModel)
 	rTop->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 4.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 4.5f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	rTop->SetModelMatrix(model, uniformModel);
@@ -617,7 +618,7 @@ ComplexObject* CreateLetterR(GLuint uniformModel)
 	rTopRight->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-3.0f, 3.15f, 0.0f));
+	model = glm::translate(model, glm::vec3(3.0f, 3.15f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
 
 	rTopRight->SetModelMatrix(model, uniformModel);
@@ -627,7 +628,7 @@ ComplexObject* CreateLetterR(GLuint uniformModel)
 	rTopBottom->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 1.8f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 1.8f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	rTopBottom->SetModelMatrix(model, uniformModel);
@@ -638,8 +639,8 @@ ComplexObject* CreateLetterR(GLuint uniformModel)
 	rBottom->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 0.5f, 0.0f));
-	model = glm::rotate(model, toRadians(130), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 0.5f, 0.0f));
+	model = glm::rotate(model, toRadians(45), glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 3.5f, 1.0f));
 
 	rBottom->SetModelMatrix(model, uniformModel);
@@ -699,7 +700,7 @@ ComplexObject* CreateNumber2(GLuint uniformModel)
 	twoTop->CreateMesh(vertices, indices, 24, 36);
 	glm::mat4 model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 4.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 4.5f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	twoTop->SetModelMatrix(model, uniformModel);
@@ -711,7 +712,7 @@ ComplexObject* CreateNumber2(GLuint uniformModel)
 	model = glm::mat4(1.0f);
 
 
-	model = glm::translate(model, glm::vec3(-3.0f, 3.15f, 0.0f));
+	model = glm::translate(model, glm::vec3(3.0f, 3.15f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
 
 	twoRightSide->SetModelMatrix(model, uniformModel);
@@ -721,7 +722,7 @@ ComplexObject* CreateNumber2(GLuint uniformModel)
 	twoMid->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, 1.8f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 1.8f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	twoMid->SetModelMatrix(model, uniformModel);
@@ -732,7 +733,7 @@ ComplexObject* CreateNumber2(GLuint uniformModel)
 	model = glm::mat4(1.0f);
 
 
-	model = glm::translate(model, glm::vec3(-1.0f, 0.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(1.0f, 0.5f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
 
 	twoLeftSide->SetModelMatrix(model, uniformModel);
@@ -742,7 +743,7 @@ ComplexObject* CreateNumber2(GLuint uniformModel)
 	twobottom->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-2.0f, -0.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, -0.5f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	twobottom->SetModelMatrix(model, uniformModel);
@@ -803,7 +804,7 @@ ComplexObject* CreateNumber4(GLuint uniformModel)
 	fourTop->CreateMesh(vertices, indices, 24, 36);
 	glm::mat4 model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-1.0f, 3.6f, 0.0f));
+	model = glm::translate(model, glm::vec3(1.0f, 3.6f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 2.8f, 1.0f));
 
 	fourTop->SetModelMatrix(model, uniformModel);
@@ -815,7 +816,7 @@ ComplexObject* CreateNumber4(GLuint uniformModel)
 	model = glm::mat4(1.0f);
 
 
-	model = glm::translate(model, glm::vec3(-2.0f, 1.8f, 0.0f));
+	model = glm::translate(model, glm::vec3(2.0f, 1.8f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
 
 	fourMiddle->SetModelMatrix(model, uniformModel);
@@ -825,7 +826,7 @@ ComplexObject* CreateNumber4(GLuint uniformModel)
 	fourRight->CreateMesh(vertices, indices, 24, 36);
 	model = glm::mat4(1.0f);
 
-	model = glm::translate(model, glm::vec3(-3.0f, 2.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(3.0f, 2.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 6.0f, 1.0f));
 
 	fourRight->SetModelMatrix(model, uniformModel);
