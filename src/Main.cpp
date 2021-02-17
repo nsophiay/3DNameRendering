@@ -85,9 +85,11 @@ std::vector<Mesh*> meshList;
 std::vector<ComplexObject*> objectList;
 Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
-const float BASE_WORLD_ANGLE = -5.0f;
+const float BASE_WORLD_XANGLE = -5.0f;
+const float BASE_WORLD_YANGLE = 0.0f;
 const float BASE_WORLD_Y_POS = -0.5f;
-float currentWorldAngle = BASE_WORLD_ANGLE;
+float currentWorldXAngle = BASE_WORLD_XANGLE;
+float currentWorldYAngle = BASE_WORLD_YANGLE;
 float currentYPos = BASE_WORLD_Y_POS;
 float worldRotationIncrement = 0.5f;
 float worldPosIncrement = 0.01f;
@@ -139,24 +141,36 @@ int main(int argc, char* argv[])
 		if (window.getKeys()[GLFW_KEY_RIGHT])
 		{
 			// Anticlockwise rotation
-			currentWorldAngle += worldRotationIncrement;
+			currentWorldXAngle += worldRotationIncrement;
 		}
 		if (window.getKeys()[GLFW_KEY_LEFT])
 		{
 			// Clockwise rotation
-			currentWorldAngle -= worldRotationIncrement;
+			currentWorldXAngle -= worldRotationIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_UP])
+		{
+			// Anticlockwise rotation
+			currentWorldYAngle += worldRotationIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_DOWN])
+		{
+			// Clockwise rotation
+			currentWorldYAngle -= worldRotationIncrement;
 		}
 		if (window.getKeys()[GLFW_KEY_HOME])
 		{
 			// Reset to default rotation.
-			currentWorldAngle = BASE_WORLD_ANGLE;
-			currentYPos = BASE_WORLD_Y_POS;
+			currentWorldXAngle = BASE_WORLD_XANGLE;
+			currentWorldYAngle = BASE_WORLD_YANGLE;
 		}
-		if (window.getKeys()[GLFW_KEY_UP])
+		
+		// Handling vertical camera movement
+		if (window.getKeys()[GLFW_KEY_EQUAL])
 		{
 			currentYPos -= worldPosIncrement;
 		}
-		if (window.getKeys()[GLFW_KEY_DOWN])
+		if (window.getKeys()[GLFW_KEY_MINUS])
 		{
 			currentYPos += worldPosIncrement;
 		}
@@ -181,7 +195,8 @@ int main(int argc, char* argv[])
 		// View matrix
 		glm::mat4 view(1.0f);
 		view = glm::translate(view, glm::vec3(0.0f, currentYPos, 0.0f));
-		view = glm::rotate(view, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, toRadians(currentWorldXAngle), glm::vec3(1.0f, 0.0f, 0.0f)); // Rotating around X Axis
+		view = glm::rotate(view, toRadians(currentWorldYAngle), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotating around Y Axis
 		view = glm::rotate(view, toRadians(180), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
