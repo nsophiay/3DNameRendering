@@ -202,8 +202,9 @@ int main(int argc, char* argv[])
 
 		// Razvan
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(1.0f, 0.1f, -4.0f));
+		model = glm::translate(model, glm::vec3(-7.2f, 0.1f, 9.0f));
 		model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.2f));
+		model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		objectList[1]->SetModelMatrix(model, 0);
 		objectList[1]->RenderObject();
 
