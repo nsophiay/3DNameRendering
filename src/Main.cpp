@@ -161,13 +161,17 @@ int main(int argc, char* argv[])
 			currentYPos += worldPosIncrement;
 		}
 		
-		if (window.getKeys()[GLFW_KEY_F])
+		if (window.getKeys()[GLFW_KEY_T])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 		if (window.getKeys()[GLFW_KEY_L])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		if (window.getKeys()[GLFW_KEY_P])
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 		}
 
 
@@ -202,7 +206,7 @@ int main(int argc, char* argv[])
 
 		// Razvan
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-7.2f, 0.1f, 9.0f));
+		model = glm::translate(model, glm::vec3(-6.7f, 0.1f, 8.4f));
 		model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.2f));
 		model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		objectList[1]->SetModelMatrix(model, 0);
