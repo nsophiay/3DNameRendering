@@ -52,6 +52,12 @@ ComplexObject* CreateLetterR(GLuint uniformModel);
 ComplexObject* CreateNumber2(GLuint uniformModel);
 ComplexObject* CreateNumber4(GLuint uniformModel);
 
+/// <summary>
+/// Creates the letters SA43 using meshes and complex objects.
+/// </summary>
+/// <param name="shader">The shader that will be used to render the objects</param>
+void drawSA43(Shader* shader);
+
 
 // Global Variables
 
@@ -839,4 +845,250 @@ ComplexObject* CreateNumber4(GLuint uniformModel)
 	
 
 	return fourNumber;
+}
+
+// Draws the characters SA43
+void drawSA43(Shader* shaders) {
+
+	ComplexObject* all = new ComplexObject();
+
+	unsigned int indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		1, 5, 6,
+		6, 2, 1,
+		// back
+		7, 6, 5,
+		5, 4, 7,
+		// left
+		4, 0, 3,
+		3, 7, 4,
+		// bottom
+		4, 5, 1,
+		1, 0, 4,
+		// top
+		3, 2, 6,
+		6, 7, 3
+	};
+
+
+	GLfloat vertices[] = {
+		// front
+		-1.0, -1.0,  1.0,
+		1.0, -1.0,  1.0,
+		1.0,  1.0,  1.0,
+		-1.0,  1.0,  1.0,
+		// back
+		-1.0, -1.0, -1.0,
+		1.0, -1.0, -1.0,
+		1.0,  1.0, -1.0,
+		-1.0,  1.0, -1.0
+	};
+
+	GLfloat cube_colors[] = {
+		// front colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0,
+		// back colors
+		1.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 1.0,
+		1.0, 1.0, 1.0
+	};
+
+	GLuint uniformModel = shaders->getLocation("model");
+
+	///////
+	// S //
+	///////
+
+	ComplexObject* s = new ComplexObject();
+
+	glm::mat4 partModel(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(2.75f, 0.5f, 1.0f));
+	IndependentMesh* cubeS1 = new IndependentMesh();
+	cubeS1->CreateMesh(vertices, indices, 24, 36);
+	cubeS1->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(cubeS1);
+
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 8.0f, 0.0f));
+	IndependentMesh *cubeS2 = new IndependentMesh();
+	cubeS2->CreateMesh(vertices, indices, 24, 36);
+	cubeS2->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(cubeS2);
+
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 7.5f, 0.0f));
+	IndependentMesh *cubeS3 = new IndependentMesh();
+	cubeS3->CreateMesh(vertices, indices, 24, 36);
+	cubeS3->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(cubeS3);
+
+	partModel = glm::mat4(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 1.8f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(4.5f, 1.2f, -0.1f));
+	IndependentMesh *cubeS4 = new IndependentMesh();
+	cubeS4->CreateMesh(vertices, indices, 24, 36);
+	cubeS4->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(cubeS4);
+
+	partModel = glm::translate(partModel, glm::vec3(-9.2f, 1.9f, -0.1f));
+	IndependentMesh *cubeS5 = new IndependentMesh();
+	cubeS5->CreateMesh(vertices, indices, 24, 36);
+	cubeS5->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(cubeS5);
+
+	all->objectList.push_back(s);
+
+	glm::mat4 groupModel(1.0f);
+	//groupModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
+	groupModel = glm::rotate(groupModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	groupModel = glm::translate(groupModel, glm::vec3(5.0f, -15.0f, 0.0f));
+	s->SetModelMatrix(groupModel, uniformModel);
+
+
+	///////
+	// A //
+	///////
+
+	ComplexObject* a = new ComplexObject();
+
+	partModel = glm::mat4(1.0f); // Matrix for each fragment
+								 // First fragment
+	partModel = glm::scale(partModel, glm::vec3(2.3f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 15.3f, 0.0f));
+	IndependentMesh *cubeA1 = new IndependentMesh();
+	cubeA1->CreateMesh(vertices, indices, 24, 36);
+	cubeA1->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(cubeA1);
+
+	// Third fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(2.3f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 5.3f, 0.0f));
+	IndependentMesh *cubeA2 = new IndependentMesh();
+	cubeA2->CreateMesh(vertices, indices, 24, 36);
+	cubeA2->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(cubeA2);
+
+	// Second fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(-5.0f, 0.8f, -0.1f));
+	IndependentMesh *cubeA3 = new IndependentMesh();
+	cubeA3->CreateMesh(vertices, indices, 24, 36);
+	cubeA3->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(cubeA3);
+
+	// Fourth fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(5.1f, 0.8f, -0.1f));
+	IndependentMesh *cubeA4 = new IndependentMesh();
+	cubeA4->CreateMesh(vertices, indices, 24, 36);
+	cubeA4->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(cubeA4);
+
+	all->objectList.push_back(a);
+
+	groupModel = glm::mat4(1.0f);
+	groupModel = glm::translate(groupModel, glm::vec3(-2.8f, 0.2f, 0.0f));
+
+	a->SetModelMatrix(groupModel, uniformModel);
+
+	///////
+	// 4 //
+	///////
+
+	ComplexObject * four = new ComplexObject();
+
+	// First fragment
+	partModel = glm::translate(partModel, glm::vec3(5.3f, 0.0f, 0.0f));
+	partModel = glm::scale(partModel, glm::vec3(1.0f, 1.0f, 1.0f));
+	IndependentMesh *cube41 = new IndependentMesh();
+	cube41->CreateMesh(vertices, indices, 24, 36);
+	cube41->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube41);
+
+	// Third fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::translate(partModel, glm::vec3(2.0f, 5.7f, 0.0f));
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 2.3f, 1.0f));
+	IndependentMesh *cube42 = new IndependentMesh();
+	cube42->CreateMesh(vertices, indices, 24, 36);
+	cube42->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube42);
+
+	// Second fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::translate(partModel, glm::vec3(3.5f, 3.0f, -0.1f));
+	partModel = glm::scale(partModel, glm::vec3(2.0f, 0.5f, 1.0f));
+	IndependentMesh *cube43 = new IndependentMesh();
+	cube43->CreateMesh(vertices, indices, 24, 36);
+	cube43->SetModelMatrix(partModel, uniformModel);
+	four->meshList.push_back(cube43);
+
+	all->objectList.push_back(four);
+
+	groupModel = glm::mat4(1.0f);
+	groupModel = glm::translate(groupModel, glm::vec3(0.0f, 0.2f, 0.0f));
+
+	four->SetModelMatrix(groupModel, uniformModel);
+
+	///////
+	// 3 //
+	///////
+
+	ComplexObject * three = new ComplexObject();
+
+	// First fragment
+	partModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 4.45f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(22.0f, 0.78f, 0.0f));
+	IndependentMesh *cube31 = new IndependentMesh();
+	cube31->CreateMesh(vertices, indices, 24, 36);
+	cube31->SetModelMatrix(partModel, uniformModel);
+	three->meshList.push_back(cube31);
+
+	// Third fragment
+	partModel = glm::mat4(1.0f);
+	partModel = glm::scale(partModel, glm::vec3(2.0f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(4.5f, 14.9f, -0.1f));
+	IndependentMesh *cube32 = new IndependentMesh();
+	cube32->CreateMesh(vertices, indices, 24, 36);
+	cube32->SetModelMatrix(partModel, uniformModel);
+	three->meshList.push_back(cube32);
+
+	// Second fragment
+	partModel = glm::translate(partModel, glm::vec3(0.0f, -7.9f, -0.1f));
+	IndependentMesh *cube33 = new IndependentMesh();
+	cube33->CreateMesh(vertices, indices, 24, 36);
+	cube33->SetModelMatrix(partModel, uniformModel);
+	three->meshList.push_back(cube33);
+
+	partModel = glm::translate(partModel, glm::vec3(0.0f, -7.9f, -0.1f));
+	IndependentMesh *cube34 = new IndependentMesh();
+	cube34->CreateMesh(vertices, indices, 24, 36);
+	cube34->SetModelMatrix(partModel, uniformModel);
+	three->meshList.push_back(cube34);
+
+	all->objectList.push_back(three);
+
+	groupModel = glm::mat4(1.0f);
+	groupModel = glm::translate(groupModel, glm::vec3(0.0f, 0.2f, 0.0f));
+
+	three->SetModelMatrix(groupModel, uniformModel);
+
+	groupModel = glm::mat4(1.0f);
+	groupModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f, 0.1f, 0.1f));
+	groupModel = glm::rotate(groupModel, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	all->SetModelMatrix(groupModel, uniformModel);
+
+	s->RenderObject();
+
+	objectList.push_back(all);
+
 }
