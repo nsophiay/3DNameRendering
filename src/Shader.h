@@ -15,7 +15,11 @@ class Shader
 public:
 	unsigned int ID;
 
-	// Constructor reads and builds the shader
+	/// <summary>
+	/// Constructor, constructs shaders from file
+	/// </summary>
+	/// <param name="vertexPath"></param>
+	/// <param name="fragmentPath"></param>
 	Shader(const char* vertexPath, const char* fragmentPath);
 	void use();
 	void free(); // free program

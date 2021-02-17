@@ -9,7 +9,7 @@
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtc/type_ptr.hpp>
 
-#include "shader.h"
+#include "Shader.h"
 #include "Mesh.h"
 #include "Camera.h"
 #include "Window.h"
@@ -108,6 +108,7 @@ int main(int argc, char* argv[])
 		// Camera movement
 		camera.pan(window.getKeys(), window.getDeltaX());
 		camera.tilt(window.getKeys(), window.getDeltaY());
+		camera.movementFromKeyboard(window.getKeys());
 
 		gridShader.use();
 
@@ -134,28 +135,13 @@ int main(int argc, char* argv[])
 		}
 		if (window.getKeys()[GLFW_KEY_UP])
 		{
-			currentZpos -= worldPosIncrement;
+			currentYPos -= worldPosIncrement;
 		}
 		if (window.getKeys()[GLFW_KEY_DOWN])
 		{
-			currentZpos += worldPosIncrement;
-		}
-		if (window.getKeys()[GLFW_KEY_W])
-		{
-			currentYPos -= worldPosIncrement;
-		}
-		if (window.getKeys()[GLFW_KEY_S])
-		{
 			currentYPos += worldPosIncrement;
 		}
-		if (window.getKeys()[GLFW_KEY_A])
-		{
-			currentXPos -= worldPosIncrement;
-		}
-		if (window.getKeys()[GLFW_KEY_D])
-		{
-			currentXPos += worldPosIncrement;
-		}
+		
 		if (window.getKeys()[GLFW_KEY_F])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -175,7 +161,7 @@ int main(int argc, char* argv[])
 
 		// View matrix
 		glm::mat4 view(1.0f);
-		view = glm::translate(view, glm::vec3(currentXPos, currentYPos, currentZpos));
+		view = glm::translate(view, glm::vec3(0.0f, currentYPos, 0.0f));
 		view = glm::rotate(view, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
