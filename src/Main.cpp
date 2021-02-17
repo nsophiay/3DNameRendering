@@ -83,7 +83,7 @@ ComplexObject* CreateNumber3(GLuint uniformModel);
 const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
 std::vector<ComplexObject*> objectList;
-Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
+Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 0.5f); // Initialize camera
 Window window;
 const float BASE_WORLD_ANGLE = -5.0f;
 const float BASE_WORLD_Y_POS = -0.5f;
