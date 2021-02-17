@@ -19,7 +19,12 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 float toRadians(float deg);
-void createGrid();
+/// <summary>
+/// Creates a square grid by creating vertices for the given amount of squares (basically a 2d array).
+/// Links all the vertices with 2-pair indices that can be used with GL_LINES to draw the triangle. 
+/// </summary>
+/// <param name="squareCount">Integer describing amount of squares user wishes to be created. </param>
+void createGrid(int squareCount);
 
 // Character creation methods
 
@@ -82,7 +87,7 @@ int main(int argc, char* argv[])
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	// Creating grid
-	createGrid();
+	createGrid(128);
 	Shader gridShader = Shader("shader.vs", "shader.fs");
 
 	glm::mat4 projection(1.0f);
@@ -222,12 +227,13 @@ float toRadians(float deg)
 	return deg * (3.14159265f / 180.0f);
 }
 
-void createGrid()
+
+void createGrid(int squareCount)
 {
-	int squareCount = 128;
 	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
 
+	// Loops through each row, then for each column it creates a point clamped between 0 to 1
 	for (int i = 0; i <= squareCount; i++) {
 		for (int j = 0; j <= squareCount; j++) {
 			float x = (float)j / (float)squareCount;
@@ -240,6 +246,8 @@ void createGrid()
 		}
 	}
 
+	// A double loop to connect all the vertices with the appropriate indices.
+	// First it top left to top right vertex, then top right with bottom right, then bottom right with bottom left and finally bottom left with top right. 
 	for (int i = 0; i < squareCount; i++) {
 		for (int j = 0; j < squareCount; j++) {
 			int top = i * (1 + squareCount);
@@ -259,6 +267,7 @@ void createGrid()
 			indices.push_back(top + j);
 		}
 	}
+
 	Mesh* gridObj = new Mesh();
 	gridObj->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
 	meshList.push_back(gridObj);

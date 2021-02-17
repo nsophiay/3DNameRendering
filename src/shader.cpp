@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "Shader.h"
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -94,6 +94,7 @@ void Shader::free()
 	glUseProgram(0);
 }
 
+// Setter methods to set uniform values inside shaders. 
 void Shader::setBool(const std::string& name, bool value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
