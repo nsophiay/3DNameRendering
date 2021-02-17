@@ -78,8 +78,8 @@ void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, m
 		yaw += x;
 
 		// Keep mouse movement within a certain range
-		if (yaw > 180.0f) yaw = 180.0f;
-		if (yaw < 0.0f) yaw = 0.0f;
+		if (yaw > 360.0f) yaw = 0.0f;
+		if (yaw < 0.0f) yaw = 360.0f;
 
 		update();
 	}
