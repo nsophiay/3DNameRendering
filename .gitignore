@@ -10,3 +10,11 @@
 doc/report/project-report.pdf
 *.tps
 Thumbs.db
+src/.vs/VSWorkspaceState.json
+src/.vs/src/v16/Browse.VC.db
+src/.vs/src/v16/.suo
+src/.vs/slnx.sqlite
+src/.vs/ProgrammingAssignment/v16/ipch/AutoPCH/e5b9e20ed12a5b26/WINDOW.ipch
+src/.vs/ProgrammingAssignment/v16/ipch/AutoPCH/7319f2db69e9eaf3/MAIN.ipch
+src/.vs/ProgrammingAssignment/v16/Browse.VC.db
+src/.vs/ProgrammingAssignment/v16/.suo
