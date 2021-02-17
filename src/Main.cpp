@@ -194,7 +194,8 @@ int main(int argc, char* argv[])
 
 		// Joel
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -4.0f));
+		model = glm::translate(model, glm::vec3(7.8f, 0.0f, -8.3f));
+		model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 		objectList[0]->SetModelMatrix(model, 0);
 		objectList[0]->RenderObject();
@@ -293,33 +294,48 @@ void CreateLetters(Shader* shader) {
 	/////////////////////////////////////////
 	// Creating Joel's name and ID object //
 	////////////////////////////////////////
+	glm::mat4 model = glm::mat4(1.0f);
 
 	ComplexObject* letterJ = CreateLetterJ(modelLocation);
 	ComplexObject* letterL = CreateLetterL(modelLocation);
-	
-	
+	ComplexObject* joelNumber4 = CreateNumber4(modelLocation);
+	ComplexObject* joelNumber5 = CreateLetterS(modelLocation); // Letter S is same model as number 5
 
 	// Making the translations so that both letters can be side by side.
-
-	glm::mat4 model = glm::mat4(1.0f);
-
 	// J translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-2.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-2.0f, 0.1f, 0.0f));
+	model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	letterJ->SetModelMatrix(model, modelLocation);
 
 	// L translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.1f, -1.0f));
+	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	letterL->SetModelMatrix(model, modelLocation);
 
-	
+	// 4 translate
+	// We also change its size to match other characters
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(1.8f, 0.5f, -1.0f));
+	model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	joelNumber4->SetModelMatrix(model, modelLocation);
+
+	// 5 translate
+	// We also change its size to match other characters
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(6.5f, 0.0f, 0.28f));
+	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.525f, 0.525f, 0.525f));
+	joelNumber5->SetModelMatrix(model, modelLocation);
 
 	ComplexObject* joelNameAndID = new ComplexObject();
 	joelNameAndID->objectList.push_back(letterJ);
 	joelNameAndID->objectList.push_back(letterL);
+	joelNameAndID->objectList.push_back(joelNumber4);
+	joelNameAndID->objectList.push_back(joelNumber5);
 	
-
 	objectList.push_back(joelNameAndID);
 
 	//////////////////////////////////////////
