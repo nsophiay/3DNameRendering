@@ -384,20 +384,24 @@ void CreateLetters(Shader* shader) {
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -0.25f, 0.0f));
+	model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	letterS->SetModelMatrix(model, modelLocation);
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(6.5f, 0.0f, -2.5f));
+	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 0.98f, 1.0f));
 	letterA->SetModelMatrix(model, modelLocation);
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(9.5f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(9.0f, 0.0f, -3.5f));
+	model = glm::rotate(model, glm::radians(-20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 0.99f, 1.0f));
 	four->SetModelMatrix(model, modelLocation);
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(9.5f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(9.5f, 0.0f, -4.5f));
+	model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	number3->SetModelMatrix(model, modelLocation);
 
 	ComplexObject* SaffiaNameAndID = new ComplexObject();
@@ -1171,8 +1175,8 @@ ComplexObject* CreateNumber3(GLuint uniformModel)
 
 	// First fragment
 	glm::mat4 partModel(1.0f);
-	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.45f, 1.0f));
-	partModel = glm::translate(partModel, glm::vec3(22.0f, 0.78f, 0.0f));
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.4f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(22.0f, 0.82f, 0.0f));
 	IndependentMesh *cube31 = new IndependentMesh();
 	cube31->CreateMesh(vertices, indices, 24, 36);
 	cube31->SetModelMatrix(partModel, uniformModel);
