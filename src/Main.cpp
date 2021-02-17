@@ -50,9 +50,16 @@ std::vector<Mesh*> meshList;
 std::vector<ComplexObject*> objectList;
 Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 1.0f); // Initialize camera
 Window window;
-const float BASE_WORLD_ANGLE = 45.0f;
+const float BASE_WORLD_ANGLE = -5.0f;
+const float BASE_WORLD_Z_POS = 1.0f;
+const float BASE_WORLD_Y_POS = -0.5f;
+const float BASE_WORLD_X_POS = 0.0f;
 float currentWorldAngle = BASE_WORLD_ANGLE;
+float currentXPos = BASE_WORLD_X_POS;
+float currentYPos = BASE_WORLD_Y_POS;
+float currentZpos = BASE_WORLD_Z_POS;
 float worldRotationIncrement = 0.5f;
+float worldPosIncrement = 0.01f;
 
 
 int main(int argc, char* argv[])
@@ -78,6 +85,8 @@ int main(int argc, char* argv[])
 
 	// Creating the letters
 	CreateLetters(&gridShader);
+
+	
 
 	while (!window.getShouldClose())
 	{
@@ -109,19 +118,57 @@ int main(int argc, char* argv[])
 		{
 			// Reset to default rotation.
 			currentWorldAngle = BASE_WORLD_ANGLE;
+			currentZpos = BASE_WORLD_Z_POS;
+		}
+		if (window.getKeys()[GLFW_KEY_UP])
+		{
+			currentZpos -= worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_DOWN])
+		{
+			currentZpos += worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_W])
+		{
+			currentYPos -= worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_S])
+		{
+			currentYPos += worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_A])
+		{
+			currentXPos -= worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_D])
+		{
+			currentXPos += worldPosIncrement;
+		}
+		if (window.getKeys()[GLFW_KEY_F])
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+		if (window.getKeys()[GLFW_KEY_L])
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
 
 
 		// Model matrix
 		glm::mat4 model(1.0f);
-		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -1.0f));
-		model = glm::scale(model, glm::vec3(8.0f, 8.0f, 1.0f));
-		model = glm::rotate(model, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-10.0f, 0.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
+		model = glm::rotate(model, toRadians(0), glm::vec3(1.0f, 0.0f, 0.0f));
+
 
 		// View matrix
 		glm::mat4 view(1.0f);
-		view = glm::rotate(view, toRadians(-85), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::translate(view, glm::vec3(currentXPos, currentYPos, currentZpos));
+		view = glm::rotate(view, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
+
+
+		
 
 		// Connect matrices with shaders
 		gridShader.setMatrix4Float("model", &model);
@@ -129,6 +176,11 @@ int main(int argc, char* argv[])
 		gridShader.setMatrix4Float("view", &view);
 		meshList[0]->RenderMesh(GL_LINES);
 
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.0f));
+		objectList[0]->SetModelMatrix(model, 0);
 		objectList[0]->RenderObject();
 
 		gridShader.free();
