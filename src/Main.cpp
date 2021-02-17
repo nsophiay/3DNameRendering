@@ -118,6 +118,8 @@ int main(int argc, char* argv[])
 		{
 			// Reset to default rotation.
 			currentWorldAngle = BASE_WORLD_ANGLE;
+			currentXPos = BASE_WORLD_X_POS;
+			currentYPos = BASE_WORLD_Y_POS;
 			currentZpos = BASE_WORLD_Z_POS;
 		}
 		if (window.getKeys()[GLFW_KEY_UP])
@@ -167,8 +169,6 @@ int main(int argc, char* argv[])
 		view = glm::rotate(view, toRadians(currentWorldAngle), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
-
-		
 
 		// Connect matrices with shaders
 		gridShader.setMatrix4Float("model", &model);
