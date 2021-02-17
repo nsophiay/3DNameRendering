@@ -351,18 +351,22 @@ void CreateLetters(Shader* shader) {
 	// R translate
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	letterR->SetModelMatrix(model, modelLocation);
 	// P translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(5.0f, 0.0f, -2.0f));
+	model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	letterP->SetModelMatrix(model, modelLocation);
 	// 2 translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(13.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(12.5f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	number2->SetModelMatrix(model, modelLocation);
 	// 4 translate
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(9.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(9.0f, 0.0f, -1.80f));
+	model = glm::rotate(model, glm::radians(-18.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	number4->SetModelMatrix(model, modelLocation);
 
 	ComplexObject* razvanNameAndID = new ComplexObject();
