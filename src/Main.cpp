@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-		if (window.getKeys()[GLFW_KEY_L])
+		if (window.getKeys()[GLFW_KEY_L] && !window.getKeys()[GLFW_KEY_LEFT_SHIFT])
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		}
