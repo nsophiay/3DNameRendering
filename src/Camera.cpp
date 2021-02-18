@@ -28,43 +28,43 @@ void Camera::update() {
 
 }
 
-void Camera::movementFromKeyboard(bool* keys) { // Configure WASD key movement
+void Camera::movementFromKeyboard(bool* keys) { // Configure IJKL key movement
 
-	if (keys[GLFW_KEY_W]) {
+	if (keys[GLFW_KEY_I] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position += front * movementSpeed; // Go forward
 	}
 
-	if (keys[GLFW_KEY_A]) {
+	if (keys[GLFW_KEY_J] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position -= right * movementSpeed; // Go left
 	}
 
-	if (keys[GLFW_KEY_S]) {
+	if (keys[GLFW_KEY_K] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position -= front * movementSpeed; // Go backwards
 	}
 
-	if (keys[GLFW_KEY_D]) {
+	if (keys[GLFW_KEY_L] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position += right * movementSpeed; // Go right
 	}
 
 }
 
-void Camera::movementFromKeyboard(bool* keys, GLfloat deltatime) { // Configure WASD key movement
+void Camera::movementFromKeyboard(bool* keys, GLfloat deltatime) { // Configure IJKL key movement
 
 	GLfloat velocity = movementSpeed * deltatime;
 
-	if (keys[GLFW_KEY_W]) {
+	if (keys[GLFW_KEY_I] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position += front * velocity; // Go forward
 	}
 
-	if (keys[GLFW_KEY_A]) {
+	if (keys[GLFW_KEY_J] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position -= right * velocity; // Go left
 	}
 
-	if (keys[GLFW_KEY_S]) {
+	if (keys[GLFW_KEY_K] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position -= front * velocity; // Go backwards
 	}
 
-	if (keys[GLFW_KEY_D]) {
+	if (keys[GLFW_KEY_L] && keys[GLFW_KEY_LEFT_SHIFT]) {
 		position += right * velocity; // Go right
 	}
 
@@ -74,8 +74,8 @@ void Camera::movementFromKeyboard(bool* keys, GLfloat deltatime) { // Configure 
 void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, move right and left with the mouse
 
 	if (keys[GLFW_MOUSE_BUTTON_RIGHT]) {
-		x *= turnSpeed;
-		yaw += x;
+		x *= turnSpeed; // Calculate x value
+		yaw += x; // Add x value to yaw
 
 		// Keep mouse movement within a certain range
 		if (yaw > 360.0f) yaw = 0.0f;
@@ -89,8 +89,8 @@ void Camera::pan(bool* keys, GLfloat x) { // When the right button is pressed, m
 void Camera::tilt(bool* keys, GLfloat y) { // When the down button is pressed, move up and down with the mouse
 
 	if (keys[GLFW_MOUSE_BUTTON_MIDDLE]) {
-		y *= turnSpeed;
-		pitch += y;
+		y *= turnSpeed; // Calculate y value
+		pitch += y; // Add y value to pitch
 
 		// Keep mouse movement within a certain range
 		if (pitch > 50.0f) pitch = 50.0f; 
