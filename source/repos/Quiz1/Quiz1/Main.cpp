@@ -58,15 +58,29 @@ ComplexObject* CreateLetterA(GLuint uniformModel);
 /// Creates the number I using meshes and complex objects.
 /// </summary>
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
-/// <returns>A pointer to the complex object representing the number 3</returns>
+/// <returns>A pointer to the complex object representing the letter I</returns>
 ComplexObject* CreateLetterI(GLuint uniformModel);
 
 /// <summary>
 /// Creates the letter N using meshes and complex objects.
 /// </summary>
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
-/// <returns>A pointer to the complex object representing the number 3</returns>
+/// <returns>A pointer to the complex object representing the letter N</returns>
 ComplexObject* CreateLetterN(GLuint uniformModel);
+
+/// <summary>
+/// Creates the letter R using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter R</returns>
+ComplexObject* CreateLetterR(GLuint uniformModel);
+
+/// <summary>
+/// Creates the letter O using meshes and complex objects.
+/// </summary>
+/// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
+/// <returns>A pointer to the complex object representing the letter O</returns>
+ComplexObject* CreateLetterO(GLuint uniformModel);
 
 void CreateCylinder();
 
@@ -128,7 +142,7 @@ int main(int argc, char* argv[])
 
     // Setup default matrix - Saffia
     model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-1.5f, 0.58f, -1.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.1f, -10.0f));
     model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
     objectList[0]->SetModelMatrix(model, 0);
 
@@ -359,7 +373,7 @@ void CreateCylinder() {
 }
 
 // Create sphere
-IndependentMesh* CreateSphere(int radius, int longitudeCount, int latitudeCount, GLuint modelLocation) {
+IndependentMesh* CreateSphere(float radius, int longitudeCount, int latitudeCount, GLuint modelLocation) {
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
@@ -519,128 +533,100 @@ void CreateLetters(Shader* shader) {
 
 	ComplexObject* letterS = CreateLetterS(modelLocation);
 	ComplexObject* letterA = CreateLetterA(modelLocation);
+	ComplexObject* letterN = CreateLetterN(modelLocation);
+	ComplexObject* letterI = CreateLetterI(modelLocation);
+	ComplexObject* letterR = CreateLetterR(modelLocation);
+	ComplexObject* letterO = CreateLetterO(modelLocation);
 	 
 	glm::mat4 model(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -0.25f, 0.0f));
+
+	model = glm::translate(model, glm::vec3(0.5f, 30.0f, 0.0f));
 	letterS->SetModelMatrix(model, modelLocation);
-
+	
    	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	model = glm::translate(model, glm::vec3(0.5f, 24.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
 	letterA->SetModelMatrix(model, modelLocation);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-1.0f, 18.0f, 0.0f));
+	letterN->SetModelMatrix(model, modelLocation);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.5f, 12.0f, 0.0f));
+	letterI->SetModelMatrix(model, modelLocation);
+	
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-1.0f, 6.5f, 0.0f));
+	letterR->SetModelMatrix(model, modelLocation);
+	
 
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+	letterO->SetModelMatrix(model, modelLocation);
+	
 
 	ComplexObject* SaffiaNameAndID = new ComplexObject();
+
+
 	SaffiaNameAndID->objectList.push_back(letterS);
 	SaffiaNameAndID->objectList.push_back(letterA);
+	SaffiaNameAndID->objectList.push_back(letterN);
+	SaffiaNameAndID->objectList.push_back(letterI);
+	SaffiaNameAndID->objectList.push_back(letterR);
+	
+	SaffiaNameAndID->objectList.push_back(letterO);
+	
 
 	objectList.push_back(SaffiaNameAndID);
-
 
 }
 
 
 ComplexObject* CreateLetterR(GLuint uniformModel)
 {
-	// First Cube
-   // The center of the screen is 0.0f. It also goes from -1.0 to 1.0.
-   // x, y, z
-	GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.5f, // bottom top left corner, index 0
-		-0.5f, -0.5f, -0.5f, // bottom bottom left corner, index 1
-		0.5f, -0.5f, -0.5f, // bottom bottom right corner, index 2
-		0.5f, -0.5f, 0.5f, // bottom top right corner, index 3
-		-0.5f, 0.5f, 0.5f, // top top left corner, index 4
-		-0.5f, 0.5f, -0.5f, // top bottom left corner, index 5
-		0.5f, 0.5f, -0.5f, // top bottom right corner, index 6
-		0.5f, 0.5f, 0.5f, // top top right corner, index 7
-	};
-
-	// Creating the order of draws for indexed draws.
-	// This uses the position of the vertices in vertices[]. By specifying them in order, we define the drawing order of those points.
-	// So 0,3,1 means draw point at index 0, then at index 3, then at index 1.
-	// Note we are specifying them in counter clockwise order. This is to say to opengl that we are drawing front faces.
-	// We have to draw triangles, because they are the easiest polygon. So each group of 3 ints is a triangle.
-	// We are drawing top triangle, then bottom triangle, with the top triangle having its middle in the top left corner of a face.
-	unsigned int indices[] = {
-		// Left face
-		0, 5, 4,    0, 1, 5,
-		// Front face
-		1, 6, 5,    1, 2, 6,
-		// Right Face
-		2, 7, 6,    2, 3, 7,
-		// Back face
-		3, 4, 7,    3, 0, 4,
-		// Top
-		5, 7, 4,    5, 6, 7,
-		// Bottom
-		1, 3, 0,    1, 2, 3
-	};
-
-	// LETTER R
-
-	// Creating the base of the letter R
-	IndependentMesh* rBase = new IndependentMesh();
-	rBase->CreateMesh(vertices, indices, 24, 36);
-	glm::mat4 model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 6.0f, 1.0f));
-
-	rBase->SetModelMatrix(model, uniformModel);
-
-
-	// Creating top part of R
-	IndependentMesh* rTop = new IndependentMesh();
-	rTop->CreateMesh(vertices, indices, 24, 36);
-	model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(2.0f, 4.5f, 0.0f));
-	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
-
-	rTop->SetModelMatrix(model, uniformModel);
-
-	// Creating right side of top
-	IndependentMesh* rTopRight = new IndependentMesh();
-	rTopRight->CreateMesh(vertices, indices, 24, 36);
-	model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(3.0f, 3.15f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
-
-	rTopRight->SetModelMatrix(model, uniformModel);
-
-	// Creating bottom of top
-	IndependentMesh* rTopBottom = new IndependentMesh();
-	rTopBottom->CreateMesh(vertices, indices, 24, 36);
-	model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(2.0f, 1.8f, 0.0f));
-	model = glm::scale(model, glm::vec3(3.0f, 1.0f, 1.0f));
-
-	rTopBottom->SetModelMatrix(model, uniformModel);
-
-
-	// Creating bottom 
-	IndependentMesh* rBottom = new IndependentMesh();
-	rBottom->CreateMesh(vertices, indices, 24, 36);
-	model = glm::mat4(1.0f);
-
-	model = glm::translate(model, glm::vec3(2.0f, 0.5f, 0.0f));
-	model = glm::rotate(model, toRadians(45), glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 3.5f, 1.0f));
-
-	rBottom->SetModelMatrix(model, uniformModel);
 	
-	ComplexObject* rLetter = new ComplexObject();
-	rLetter->meshList.push_back(rBase);
-	rLetter->meshList.push_back(rTop);
-	rLetter->meshList.push_back(rTopRight);
-	rLetter->meshList.push_back(rTopBottom);
-	rLetter->meshList.push_back(rBottom);
+	ComplexObject *r = new ComplexObject();
+
+	// Use spheres for the vertical portions
+
+	glm::mat4 partModel(1.0f);
+	IndependentMesh *sphereR1 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::scale(sphereR1->GetModelMatrix(), glm::vec3(1.0f, 1.2f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.5f, 0.9f, 0.0f));
+	sphereR1->SetModelMatrix(partModel, uniformModel);
+	r->meshList.push_back(sphereR1);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereR2 = CreateSphere(1.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereR2->GetModelMatrix(), glm::vec3(5.4f, 2.75f, 0.0f));
+	sphereR2->SetModelMatrix(partModel, uniformModel);
+	r->meshList.push_back(sphereR2);
 
 
-	return rLetter;
+	// Use cubes for the horizontal portion
+
+	IndependentMesh *cubeR1 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeR1->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.75f, 6.5f, 0.0f));
+	cubeR1->SetModelMatrix(partModel, uniformModel);
+	r->meshList.push_back(cubeR1);
+
+	IndependentMesh *cubeR2 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeR2->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.75f, 3.0f, 0.0f));
+	cubeR2->SetModelMatrix(partModel, uniformModel);
+	r->meshList.push_back(cubeR2);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh* cubeR3 = CreateCube(uniformModel);
+	partModel = glm::translate(cubeR3->GetModelMatrix(), glm::vec3(3.8f, 0.0f, 0.0f));
+	partModel = glm::rotate(partModel, toRadians(65), glm::vec3(0.0f, 0.0f, 1.0f));
+	partModel = glm::scale(partModel, glm::vec3(0.5f, 2.0f, 1.0f));
+	cubeR3->SetModelMatrix(partModel, uniformModel);
+	r->meshList.push_back(cubeR3);
+
+	return r;
 }
 
 
@@ -690,53 +676,6 @@ ComplexObject* CreateLetterS(GLuint uniformModel)
 }
 ComplexObject* CreateLetterA(GLuint uniformModel)
 {
-	unsigned int indices[] = {
-		// front
-		0, 1, 2,
-		2, 3, 0,
-		// right
-		1, 5, 6,
-		6, 2, 1,
-		// back
-		7, 6, 5,
-		5, 4, 7,
-		// left
-		4, 0, 3,
-		3, 7, 4,
-		// bottom
-		4, 5, 1,
-		1, 0, 4,
-		// top
-		3, 2, 6,
-		6, 7, 3
-	};
-
-
-	GLfloat vertices[] = {
-		// front
-		-1.0, -1.0,  1.0,
-		1.0, -1.0,  1.0,
-		1.0,  1.0,  1.0,
-		-1.0,  1.0,  1.0,
-		// back
-		-1.0, -1.0, -1.0,
-		1.0, -1.0, -1.0,
-		1.0,  1.0, -1.0,
-		-1.0,  1.0, -1.0
-	};
-
-	GLfloat cube_colors[] = {
-		// front colors
-		1.0, 0.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 0.0, 1.0,
-		1.0, 1.0, 1.0,
-		// back colors
-		1.0, 0.0, 0.0,
-		0.0, 1.0, 0.0,
-		0.0, 0.0, 1.0,
-		1.0, 1.0, 1.0
-	};
 
 	// LETTER A
 	ComplexObject* a = new ComplexObject();
@@ -788,132 +727,125 @@ ComplexObject* CreateLetterA(GLuint uniformModel)
 
 ComplexObject* CreateLetterI(GLuint uniformModel)
 {
-    unsigned int indices[] = {
-            // front
-            0, 1, 2,
-            2, 3, 0,
-            // right
-            1, 5, 6,
-            6, 2, 1,
-            // back
-            7, 6, 5,
-            5, 4, 7,
-            // left
-            4, 0, 3,
-            3, 7, 4,
-            // bottom
-            4, 5, 1,
-            1, 0, 4,
-            // top
-            3, 2, 6,
-            6, 7, 3
-    };
-
-
-    GLfloat vertices[] = {
-            // front
-            -1.0, -1.0,  1.0,
-            1.0, -1.0,  1.0,
-            1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0,
-            // back
-            -1.0, -1.0, -1.0,
-            1.0, -1.0, -1.0,
-            1.0,  1.0, -1.0,
-            -1.0,  1.0, -1.0
-    };
-    ///////
-    // I //
-    ///////
 
     ComplexObject *i = new ComplexObject();
+
+	// Use cubes for the horizontal portion
+
     glm::mat4 partModel(1.0f);
-    partModel = glm::scale(partModel, glm::vec3(2.75f, 0.5f, 1.0f));
-    IndependentMesh *cubeI1 = new IndependentMesh();
-    cubeI1->CreateMesh(vertices, indices, 24, 36);
-    cubeI1->SetModelMatrix(partModel, uniformModel);
-    i->meshList.push_back(cubeI1);
+	IndependentMesh *cubeI1 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeI1->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 8.25f, 0.0f));
+	cubeI1->SetModelMatrix(partModel, uniformModel);
+	i->meshList.push_back(cubeI1);
 
-    partModel = glm::translate(partModel, glm::vec3(0.0f, 14.0f, 1.0f));
-    IndependentMesh *cubeI2 = new IndependentMesh();
-    cubeI2->CreateMesh(vertices, indices, 24, 36);
-    cubeI2->SetModelMatrix(partModel, uniformModel);
-    i->meshList.push_back(cubeI2);
+	IndependentMesh *cubeI3 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeI3->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, -1.0f, 0.0f));
+	cubeI3->SetModelMatrix(partModel, uniformModel);
+	i->meshList.push_back(cubeI3);
 
-    partModel = glm::mat4(1.0f);
-    partModel = glm::scale(partModel, glm::vec3(0.5f, 3.5f, 1.0f));
-    partModel = glm::translate(partModel, glm::vec3(0.0f, 1.0f, 0.0f));
-    IndependentMesh *cubeI3 = new IndependentMesh();
-    cubeI3->CreateMesh(vertices, indices, 24, 36);
-    cubeI3->SetModelMatrix(partModel, uniformModel);
-    i->meshList.push_back(cubeI3);
+	// Use spheres for the vertical portion
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereI2 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereI2->GetModelMatrix(), glm::vec3(0.0f, 1.75f, 1.0f));
+	sphereI2->SetModelMatrix(partModel, uniformModel);
+	i->meshList.push_back(sphereI2);
 
     return i;
 }
 
 ComplexObject* CreateLetterN(GLuint uniformModel)
 {
-    ///////
-    // N //
-    ///////
-    unsigned int indices[] = {
-            // front
-            0, 1, 2,
-            2, 3, 0,
-            // right
-            1, 5, 6,
-            6, 2, 1,
-            // back
-            7, 6, 5,
-            5, 4, 7,
-            // left
-            4, 0, 3,
-            3, 7, 4,
-            // bottom
-            4, 5, 1,
-            1, 0, 4,
-            // top
-            3, 2, 6,
-            6, 7, 3
-    };
 
-
-    GLfloat vertices[] = {
-            // front
-            -1.0, -1.0,  1.0,
-            1.0, -1.0,  1.0,
-            1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0,
-            // back
-            -1.0, -1.0, -1.0,
-            1.0, -1.0, -1.0,
-            1.0,  1.0, -1.0,
-            -1.0,  1.0, -1.0
-    };
     ComplexObject *n = new ComplexObject();
+
+	// Use spheres for the vertical portions
+
     glm::mat4 partModel(1.0f);
-    partModel = glm::scale(partModel, glm::vec3(0.5f, 3.9f, 1.0f));
-    partModel = glm::translate(partModel, glm::vec3(0.0f, 0.9f, 0.0f));
-    IndependentMesh *cubeN1 = new IndependentMesh();
-    cubeN1->CreateMesh(vertices, indices, 24, 36);
-    cubeN1->SetModelMatrix(partModel, uniformModel);
-    n->meshList.push_back(cubeN1);
+    IndependentMesh *sphereN1 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN1->GetModelMatrix(), glm::vec3(0.0f, 0.9f, 0.0f));
+	sphereN1->SetModelMatrix(partModel, uniformModel);
+    n->meshList.push_back(sphereN1);
 
-    partModel = glm::translate(partModel, glm::vec3(9.45f, 0.0f, 0.0f));
-    IndependentMesh *cubeN2 = new IndependentMesh();
-    cubeN2->CreateMesh(vertices, indices, 24, 36);
-    cubeN2->SetModelMatrix(partModel, uniformModel);
-    n->meshList.push_back(cubeN2);
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN3 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN3->GetModelMatrix(), glm::vec3(6.0f, 0.9f, 0.0f));
+	sphereN3->SetModelMatrix(partModel, uniformModel);
+	n->meshList.push_back(sphereN3);
 
-    partModel = glm::mat4(1.0f);
-    partModel = glm::scale(partModel, glm::vec3(2.75f, 0.5f, 1.0f));
-    partModel = glm::translate(partModel, glm::vec3(0.9f, 14.0f, 0.0f));
-    IndependentMesh *cubeN4 = new IndependentMesh();
-    cubeN4->CreateMesh(vertices, indices, 24, 36);
-    cubeN4->SetModelMatrix(partModel, uniformModel);
-    n->meshList.push_back(cubeN4);
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN4 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN4->GetModelMatrix(), glm::vec3(0.0f, 3.0f, 0.0f));
+	sphereN4->SetModelMatrix(partModel, uniformModel);
+	n->meshList.push_back(sphereN4);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN5 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN5->GetModelMatrix(), glm::vec3(6.0f, 3.0f, 0.0f));
+	sphereN5->SetModelMatrix(partModel, uniformModel);
+	n->meshList.push_back(sphereN5);
+
+
+	// Use cubes for the horizontal portion
+
+	IndependentMesh *cubeN2 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeN2->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(1.0f, 8.75f, 0.0f));
+	cubeN2->SetModelMatrix(partModel, uniformModel);
+	n->meshList.push_back(cubeN2);
 
     return n;
+}
+
+ComplexObject* CreateLetterO(GLuint uniformModel)
+{
+
+	ComplexObject *o = new ComplexObject();
+
+	// Use spheres for the vertical portions
+
+	glm::mat4 partModel(1.0f);
+	IndependentMesh *sphereN1 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN1->GetModelMatrix(), glm::vec3(0.0f, 0.9f, 0.0f));
+	sphereN1->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(sphereN1);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN3 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN3->GetModelMatrix(), glm::vec3(6.0f, 0.9f, 0.0f));
+	sphereN3->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(sphereN3);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN4 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN4->GetModelMatrix(), glm::vec3(0.0f, 3.0f, 0.0f));
+	sphereN4->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(sphereN4);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereN5 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereN5->GetModelMatrix(), glm::vec3(6.0f, 3.0f, 0.0f));
+	sphereN5->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(sphereN5);
+
+
+	// Use cubes for the horizontal portion
+
+	IndependentMesh *cubeN2 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeN2->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(1.0f, 8.75f, 0.0f));
+	cubeN2->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(cubeN2);
+
+	IndependentMesh *cubeN6 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeN6->GetModelMatrix(), glm::vec3(3.5f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(1.0f, -1.0f, 0.0f));
+	cubeN6->SetModelMatrix(partModel, uniformModel);
+	o->meshList.push_back(cubeN6);
+
+	return o;
 }
 
 
