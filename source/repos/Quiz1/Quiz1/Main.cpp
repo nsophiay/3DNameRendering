@@ -19,7 +19,7 @@
 
 // References used:
 // - Cylinder http://www.songho.ca/opengl/gl_cylinder.html#example_cylinder
-// - Sphere https://gist.github.com/zwzmzd/0195733fa1210346b00d
+// - Sphere http://www.songho.ca/opengl/gl_sphere.html
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -82,9 +82,10 @@ ComplexObject* CreateLetterR(GLuint uniformModel);
 /// <returns>A pointer to the complex object representing the letter O</returns>
 ComplexObject* CreateLetterO(GLuint uniformModel);
 
-void CreateCylinder();
+ComplexObject* CreateCylinder(int sectorCount, float height, float radius);
+std::vector<float> getUnitCircleVertices(int sectorCount);
 
-void CreateAxises(Shader* shader);
+void CreateAxes();
 
 /// <summary>
 // Reads keyboard input and sets selectedModel to desired input.
@@ -135,8 +136,8 @@ int main(int argc, char* argv[])
 	// Creating the letters
 	CreateLetters(&gridShader);
 
-	// Create the axises
-	CreateAxises(&gridShader);
+	// Create the axes
+	CreateAxes();
 
 	glm::mat4 model;
 
@@ -278,24 +279,27 @@ int main(int argc, char* argv[])
 		model = glm::mat4(1.0f);
 		gridShader.setMatrix4Float("model", &model);
 
-		CreateCylinder();
-
 		// Render the set of axis
-		// Setting the colors
-		gridShader.setFloat("r", 1.0); // Red
-		gridShader.setFloat("rg", 0.0f); // Green
-		gridShader.setFloat("rgb", 0.0f); // Blue
-		objectList[2]->RenderObject();
 
-		gridShader.setFloat("r", 0.0f);
-		gridShader.setFloat("rg", 1.0f);
-		gridShader.setFloat("rgb", 0.0f);
-		objectList[2]->RenderObject();
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(1.25f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		objectList[1]->objectList[0]->SetColour(1.0f, 0.0f, 0.0f); // Red
+		objectList[1]->objectList[0]->SetModelMatrix(model, 0);
+		objectList[1]->objectList[0]->RenderObject(gridShader);
 
-		gridShader.setFloat("r", 0.0f);
-		gridShader.setFloat("rg", 0.0f);
-		gridShader.setFloat("rgb", 1.0f);
-		objectList[2]->RenderObject();
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(1.0f, 0.5f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 1.25f, 0.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		objectList[1]->objectList[1]->SetColour(0.0f, 1.0f, 0.0f); // Green
+		objectList[1]->objectList[1]->SetModelMatrix(model, 0);
+		objectList[1]->objectList[1]->RenderObject(gridShader);
+
+		model = glm::mat4(1.0f);
+		objectList[1]->objectList[2]->SetColour(0.0f, 0.0f, 1.0f); // Blue
+		objectList[1]->objectList[2]->SetModelMatrix(model, 0);
+		objectList[1]->objectList[2]->RenderObject(gridShader);
 
 		gridShader.free();
 
@@ -370,20 +374,149 @@ void createGrid(int squareCount)
 	meshList.push_back(gridObj);
 }
 
-void CreateCylinder() {
+///////////////////////////////////////////////////////////
+// Source: http://www.songho.ca/opengl/gl_cylinder.html. //
+// generate a unit circle on XY-plane
+std::vector<float> getUnitCircleVertices(int sectorCount)
+{
+	const float PI = 3.1415926f;
+	float sectorStep = 2 * glm::pi<float>() / sectorCount;
+	float sectorAngle;  // radian
 
+	std::vector<float> unitCircleVertices;
+	for (int i = 0; i <= sectorCount; ++i)
+	{
+		sectorAngle = i * sectorStep;
+		unitCircleVertices.push_back(cos(sectorAngle)); // x
+		unitCircleVertices.push_back(sin(sectorAngle)); // y
+		unitCircleVertices.push_back(0);                // z
+	}
+	return unitCircleVertices;
+}
+///////////////////////////////////////////////////////////
+
+ComplexObject* CreateCylinder(int sectorCount, float height, float radius) {
+
+	std::vector<GLfloat> vertices;
+	std::vector<GLuint> indices;
+
+	///////////////////////////////////////////////////////////
+	// Source: http://www.songho.ca/opengl/gl_cylinder.html. //
+
+
+	// get unit circle vectors on XY-plane
+	std::vector<float> unitVertices = getUnitCircleVertices(sectorCount);
+
+	// put side vertices to arrays
+	for (int i = 0; i < 2; ++i)
+	{
+		float h = -height / 2.0f + i * height;           // z value; -h/2 to h/2
+		float t = 1.0f - i;                              // vertical tex coord; 1 to 0
+
+		for (int j = 0, k = 0; j <= sectorCount; ++j, k += 3)
+		{
+			float ux = unitVertices[k];
+			float uy = unitVertices[k + 1];
+			float uz = unitVertices[k + 2];
+			// position vector
+			vertices.push_back(ux * radius);             // vx
+			vertices.push_back(uy * radius);             // vy
+			vertices.push_back(h);                       // vz
+		}
+	}
+
+	// the starting index for the base/top surface
+	//NOTE: it is used for generating indices later
+	int baseCenterIndex = (int)vertices.size() / 3;
+	int topCenterIndex = baseCenterIndex + sectorCount + 1; // include center vertex
+
+															// put base and top vertices to arrays
+	for (int i = 0; i < 2; ++i)
+	{
+		float h = -height / 2.0f + i * height;           // z value; -h/2 to h/2
+		float nz = -1 + i * 2;                           // z value of normal; -1 to 1
+
+														 // center point
+		vertices.push_back(0);     vertices.push_back(0);     vertices.push_back(h);
+
+		for (int j = 0, k = 0; j < sectorCount; ++j, k += 3)
+		{
+			float ux = unitVertices[k];
+			float uy = unitVertices[k + 1];
+			// position vector
+			vertices.push_back(ux * radius);             // vx
+			vertices.push_back(uy * radius);             // vy
+			vertices.push_back(h);                       // vz
+														 // normal vector
+		}
+	}
+
+
+	// generate CCW index list of cylinder triangles
+	int k1 = 0;                         // 1st vertex index at base
+	int k2 = sectorCount + 1;           // 1st vertex index at top
+
+										// indices for the side surface
+	for (int i = 0; i < sectorCount; ++i, ++k1, ++k2)
+	{
+		// 2 triangles per sector
+		// k1 => k1+1 => k2
+		indices.push_back(k1);
+		indices.push_back(k1 + 1);
+		indices.push_back(k2);
+
+		// k2 => k1+1 => k2+1
+		indices.push_back(k2);
+		indices.push_back(k1 + 1);
+		indices.push_back(k2 + 1);
+	}
+
+	// indices for the base surface
+	for (int i = 0, k = baseCenterIndex + 1; i < sectorCount; ++i, ++k)
+	{
+		if (i < sectorCount - 1)
+		{
+			indices.push_back(baseCenterIndex);
+			indices.push_back(k + 1);
+			indices.push_back(k);
+		}
+		else // last triangle
+		{
+			indices.push_back(baseCenterIndex);
+			indices.push_back(baseCenterIndex + 1);
+			indices.push_back(k);
+		}
+	}
+
+	// indices for the top surface
+	for (int i = 0, k = topCenterIndex + 1; i < sectorCount; ++i, ++k)
+	{
+		if (i < sectorCount - 1)
+		{
+			indices.push_back(topCenterIndex);
+			indices.push_back(k);
+			indices.push_back(k + 1);
+		}
+		else // last triangle
+		{
+			indices.push_back(topCenterIndex);
+			indices.push_back(k);
+			indices.push_back(topCenterIndex + 1);
+		}
+	}
+	
+	///////////////////////////////////////////////////////////
+
+	IndependentMesh* m = new IndependentMesh();
+	m->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
 	ComplexObject* cylinder = new ComplexObject();
+	cylinder->meshList.push_back(m);
 
-	// Cylinder with diameter 0.25 and length 2.5
-	//Cylinder cr(0.125f, 0.125f, 2.5f, 36, 8, false); // baseRadius, topRadius, height, sectors, stacks, flat shading
-	Cylinder cr(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, false);
-
-	IndependentMesh *c = new IndependentMesh();
-	c->CreateCylinder(cr);
-
-	objectList.push_back(cylinder);
+	return cylinder;
 
 }
+
+
 
 // Create sphere
 IndependentMesh* CreateSphere(float radius, int longitudeCount, int latitudeCount, GLuint modelLocation) {
@@ -863,55 +996,24 @@ ComplexObject* CreateLetterO(GLuint uniformModel)
 }
 
 
-void CreateAxises(Shader* shader)
+void CreateAxes()
 {
-	GLuint modelLocation = shader->getLocation("model");
 
-	// 4 points for our axises
-	GLfloat vertices[] = {
-		0.0, 0.0, 0.0,
-		7.0, 0.0, 0.0,
-		0.0, 7.0, 0.0,
-		0.0, 0.0, 7.0
-	};
+	ComplexObject *axes = new ComplexObject();
 
-	// We draw 3 lines.
-	unsigned int indicesX[] = {
-		0, 1
-	};
+	// Create 3 cylinders, one for each axis
+	ComplexObject *x = CreateCylinder(5, 2.5f, 0.125f);
+	ComplexObject *y = CreateCylinder(5, 2.5f, 0.125f);
+	ComplexObject *z = CreateCylinder(5, 2.5f, 0.125f);
 
-	unsigned int indicesY[] = {
-		0, 2
-	};
+	// Add them to the complex object of the entire axis
+	axes->objectList.push_back(x);
+	axes->objectList.push_back(y);
+	axes->objectList.push_back(z);
+	
+	// Add to total object list
+	objectList.push_back(axes);
 
-	unsigned int indicesZ[] = {
-		0, 3
-	};
-
-	ComplexObject* axises = new ComplexObject();
-
-	// Moving the set of axis
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.005f, 0.0f));
-	model = glm::rotate(model, glm::radians(-0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.156f, 0.156f, 0.156f));
-
-	IndependentMesh* objX = new IndependentMesh();
-	objX->CreateMesh(vertices, indicesX, 12, 2);
-	objX->SetModelMatrix(model, modelLocation);
-	axises->meshList.push_back(objX);
-
-	IndependentMesh* objY = new IndependentMesh();
-	objY->CreateMesh(vertices, indicesY, 12, 2);
-	objY->SetModelMatrix(model, modelLocation);
-	axises->meshList.push_back(objY);
-
-	IndependentMesh* objZ = new IndependentMesh();
-	objZ->CreateMesh(vertices, indicesZ, 12, 2);
-	objZ->SetModelMatrix(model, modelLocation);
-	axises->meshList.push_back(objZ);
-
-	objectList.push_back(axises);
 }
 
 void SelectModel()
