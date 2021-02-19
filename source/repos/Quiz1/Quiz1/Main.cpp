@@ -253,9 +253,24 @@ int main(int argc, char* argv[])
 
 		// Saffia
         // If 3 is pressed, transform model with keyboard
-        if(selectedModel == 2){
-            objectList[0]->Transform(window.getKeys());
+        if(selectedModel == 0){
+            objectList[0]->objectList[0]->Transform(window.getKeys());
         }
+		if (selectedModel == 1) {
+			objectList[0]->objectList[1]->Transform(window.getKeys());
+		}
+		if (selectedModel == 2) {
+			objectList[0]->objectList[2]->Transform(window.getKeys());
+		}
+		if (selectedModel == 3) {
+			objectList[0]->objectList[3]->Transform(window.getKeys());
+		}
+		if (selectedModel == 4) {
+			objectList[0]->objectList[4]->Transform(window.getKeys());
+		}
+		if (selectedModel == 5) {
+			objectList[0]->objectList[5]->Transform(window.getKeys());
+		}
 		objectList[0]->RenderObject(gridShader);
 
 
@@ -566,7 +581,7 @@ void CreateLetters(Shader* shader) {
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
 	letterO->SetModelMatrix(model, modelLocation);
-	letterO->SetColour(0.71f, 0.0f, 0.0f); // Red
+	letterO->SetColour(0.71f, 0.0f, 0.0f); // Dark red
 	
 	ComplexObject* SaffiaNameAndID = new ComplexObject();
 
@@ -908,5 +923,6 @@ void SelectModel()
     if(keys[GLFW_KEY_3]) selectedModel = 2;
     if(keys[GLFW_KEY_4]) selectedModel = 3;
     if(keys[GLFW_KEY_5]) selectedModel = 4;
+	if(keys[GLFW_KEY_6]) selectedModel = 5;
 
 }
