@@ -140,5 +140,7 @@ class ComplexObject
 		bool hasModelMatrix;
 
 		GLfloat red, green, blue;
+		float initialR, initialG, initialB;
+		bool colourHasBeenSet;
 };
 

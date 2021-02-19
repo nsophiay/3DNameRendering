@@ -1,5 +1,6 @@
 #include "ComplexObject.h"
 
+
 ComplexObject::ComplexObject()
 {
 	meshList = std::vector<Mesh*>();
@@ -14,6 +15,8 @@ ComplexObject::ComplexObject()
 	red = 0.55f;
 	green = 0.55f;
 	blue = 0.55f;
+
+	colourHasBeenSet = false;
 }
 
 ComplexObject::~ComplexObject()
@@ -183,6 +186,13 @@ void ComplexObject::SetColour(GLfloat r, GLfloat g, GLfloat b) {
 	green = g;
 	blue = b;
 
+	if (!colourHasBeenSet) {
+		initialR = red;
+		initialG = green;
+		initialB = blue;
+		colourHasBeenSet = true;
+	}
+
 }
 
 void ComplexObject::SetColour(int hex) {
@@ -191,6 +201,13 @@ void ComplexObject::SetColour(int hex) {
 	red = rgb[0];
 	green = rgb[1];
 	blue = rgb[2];
+
+	if (!colourHasBeenSet) {
+		initialR = red;
+		initialG = green;
+		initialB = blue;
+		colourHasBeenSet = true;
+	}
 }
 
 void ComplexObject::ClearObject()
@@ -269,6 +286,7 @@ void ComplexObject::ScaleModel(GLfloat xScale, GLfloat yScale, GLfloat zScale)
 
 void ComplexObject::Transform(bool* keys)
 {
+
     // Move up when capital W is pressed
     if(keys[GLFW_KEY_W] && keys[GLFW_KEY_LEFT_SHIFT])
     {
@@ -307,6 +325,31 @@ void ComplexObject::Transform(bool* keys)
     if(keys[GLFW_KEY_J] && !keys[GLFW_KEY_LEFT_SHIFT]){
         ScaleModel(0.99f, 0.99f, 0.99f);
     }
+
+	// Adjust red
+	if (keys[GLFW_KEY_7]) {
+		if(keys[GLFW_KEY_KP_ADD]) red += 0.08;
+		else if (keys[GLFW_KEY_KP_SUBTRACT]) red -= 0.08;
+	}
+
+	// Adjust green
+	if (keys[GLFW_KEY_8]) {
+		if (keys[GLFW_KEY_KP_ADD]) green += 0.08;
+		else if (keys[GLFW_KEY_KP_SUBTRACT]) green -= 0.08;
+	}
+
+	// Adjust blue
+	if (keys[GLFW_KEY_9]) {
+		if (keys[GLFW_KEY_KP_ADD]) blue += 0.08;
+		else if (keys[GLFW_KEY_KP_SUBTRACT]) blue -= 0.08;
+	}
+
+	// Reset colour
+	if (keys[GLFW_KEY_0]) {
+		red = initialR;
+		green = initialG;
+		blue = initialB;
+	}
 }
 
 float* ComplexObject::hexToRGB(int hexValue) {

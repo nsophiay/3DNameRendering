@@ -276,9 +276,9 @@ int main(int argc, char* argv[])
 		model = glm::mat4(1.0f);
 		gridShader.setMatrix4Float("model", &model);
 
-		///////////
-		// Axes ///
-		///////////
+		//////////
+		// Axes //
+		//////////
 
 		// Move axes a bit to the left so you can see my letters
 		model = glm::translate(model, glm::vec3(-0.12f, 0.0f, 0.0f));
