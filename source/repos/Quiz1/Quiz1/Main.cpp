@@ -251,14 +251,12 @@ int main(int argc, char* argv[])
 		gridShader.setFloat("rg", 0.55f);
 		gridShader.setFloat("rgb", 0.55f);
 
-	
-
 		// Saffia
         // If 3 is pressed, transform model with keyboard
         if(selectedModel == 2){
             objectList[0]->Transform(window.getKeys());
         }
-		objectList[0]->RenderObject();
+		objectList[0]->RenderObject(gridShader);
 
 
 		// Resetting the matrix
@@ -542,42 +540,43 @@ void CreateLetters(Shader* shader) {
 
 	model = glm::translate(model, glm::vec3(0.5f, 30.0f, 0.0f));
 	letterS->SetModelMatrix(model, modelLocation);
+	letterS->SetColour(0.96f, 1.0f, 0.0f); // Yellow
 	
    	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.5f, 24.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
 	letterA->SetModelMatrix(model, modelLocation);
+	letterA->SetColour(1.0f, 0.8f, 0.0f); // Gold
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 18.0f, 0.0f));
 	letterN->SetModelMatrix(model, modelLocation);
+	letterN->SetColour(1.0f, 0.6f, 0.0f); // Orange
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.5f, 12.0f, 0.0f));
 	letterI->SetModelMatrix(model, modelLocation);
+	letterI->SetColour(0.98f, 0.39f, 0.0f); // Dark Orange
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 6.5f, 0.0f));
 	letterR->SetModelMatrix(model, modelLocation);
-	
+	letterR->SetColour(0.92f, 0.07f, 0.07f); // Red
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
 	letterO->SetModelMatrix(model, modelLocation);
+	letterO->SetColour(0.71f, 0.0f, 0.0f); // Red
 	
-
 	ComplexObject* SaffiaNameAndID = new ComplexObject();
-
 
 	SaffiaNameAndID->objectList.push_back(letterS);
 	SaffiaNameAndID->objectList.push_back(letterA);
 	SaffiaNameAndID->objectList.push_back(letterN);
 	SaffiaNameAndID->objectList.push_back(letterI);
 	SaffiaNameAndID->objectList.push_back(letterR);
-	
 	SaffiaNameAndID->objectList.push_back(letterO);
 	
-
 	objectList.push_back(SaffiaNameAndID);
 
 }
