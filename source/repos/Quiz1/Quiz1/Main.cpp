@@ -525,8 +525,8 @@ void CreateLetters(Shader* shader) {
 	letterS->SetModelMatrix(model, modelLocation);
 
    	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(6.5f, 0.0f, -2.5f));
-	model = glm::scale(model, glm::vec3(1.0f, 0.98f, 1.0f));
+	model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 	letterA->SetModelMatrix(model, modelLocation);
 
 
@@ -743,40 +743,45 @@ ComplexObject* CreateLetterA(GLuint uniformModel)
 
 	glm::mat4 partModel(1.0f); 
 	
-	// First fragment
-	partModel = glm::scale(partModel, glm::vec3(2.3f, 0.5f, 1.0f));
-	partModel = glm::translate(partModel, glm::vec3(0.0f, 15.3f, 0.0f));
-	IndependentMesh *cubeA1 = new IndependentMesh();
-	cubeA1->CreateMesh(vertices, indices, 24, 36);
+	// Use cubes for horizontal portions
+
+	IndependentMesh *cubeA1 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeA1->GetModelMatrix(), glm::vec3(4.0f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 5.0f, 0.0f));
 	cubeA1->SetModelMatrix(partModel, uniformModel);
 	a->meshList.push_back(cubeA1);
 
-	// Third fragment
 	partModel = glm::mat4(1.0f);
-	partModel = glm::scale(partModel, glm::vec3(2.3f, 0.5f, 1.0f));
-	partModel = glm::translate(partModel, glm::vec3(0.0f, 5.3f, 0.0f));
-	IndependentMesh *cubeA2 = new IndependentMesh();
-	cubeA2->CreateMesh(vertices, indices, 24, 36);
+	IndependentMesh *cubeA2 = CreateCube(uniformModel);
+	partModel = glm::scale(cubeA2->GetModelMatrix(), glm::vec3(4.0f, 0.5f, 1.0f));
+	partModel = glm::translate(partModel, glm::vec3(0.0f, 10.5f, 0.0f));
 	cubeA2->SetModelMatrix(partModel, uniformModel);
 	a->meshList.push_back(cubeA2);
 
-	// Second fragment
+	// Use spheres for vertical portions
 	partModel = glm::mat4(1.0f);
-	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.5f, 1.0f));
-	partModel = glm::translate(partModel, glm::vec3(-5.0f, 0.8f, -0.1f));
-	IndependentMesh *cubeA3 = new IndependentMesh();
-	cubeA3->CreateMesh(vertices, indices, 24, 36);
-	cubeA3->SetModelMatrix(partModel, uniformModel);
-	a->meshList.push_back(cubeA3);
+	IndependentMesh *sphereA3 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereA3->GetModelMatrix(), glm::vec3(-5.0f, 0.8f, -0.1f));
+	sphereA3->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(sphereA3);
 
-	// Fourth fragment
 	partModel = glm::mat4(1.0f);
-	partModel = glm::scale(partModel, glm::vec3(0.5f, 4.5f, 1.0f));
-	partModel = glm::translate(partModel, glm::vec3(5.1f, 0.8f, -0.1f));
-	IndependentMesh *cubeA4 = new IndependentMesh();
-	cubeA4->CreateMesh(vertices, indices, 24, 36);
-	cubeA4->SetModelMatrix(partModel, uniformModel);
-	a->meshList.push_back(cubeA4);
+	IndependentMesh *sphereA4 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereA4->GetModelMatrix(), glm::vec3(5.1f, 0.8f, -0.1f));
+	sphereA4->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(sphereA4);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereA5 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereA5->GetModelMatrix(), glm::vec3(-5.0f, 4.0f, -0.1f));
+	sphereA5->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(sphereA5);
+
+	partModel = glm::mat4(1.0f);
+	IndependentMesh *sphereA6 = CreateSphere(2.0, 40, 40, uniformModel);
+	partModel = glm::translate(sphereA6->GetModelMatrix(), glm::vec3(5.1f, 4.0f, -0.1f));
+	sphereA6->SetModelMatrix(partModel, uniformModel);
+	a->meshList.push_back(sphereA6);
 
 	return a;
 }
