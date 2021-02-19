@@ -16,9 +16,12 @@
 #include "IndependentMesh.h"
 #include "ComplexObject.h"
 
-// References used:
-// - Cylinder http://www.songho.ca/opengl/gl_cylinder.html#example_cylinder
-// - Sphere http://www.songho.ca/opengl/gl_sphere.html
+//////////////////////////////////////////////////////////////////////////////////////
+// References used:																	//
+// - Cylinder http://www.songho.ca/opengl/gl_cylinder.html#example_cylinder			//
+// - Sphere http://www.songho.ca/opengl/gl_sphere.html								//
+//////////////////////////////////////////////////////////////////////////////////////
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -38,8 +41,6 @@ void createGrid(int squareCount);
 /// </summary>
 /// <param name="shader">The shader that will be used to render the objects</param>
 void CreateLetters(Shader* shader);
-
-
 /// <summary>
 /// Creates the letter S using meshes and complex objects.
 /// </summary>
@@ -52,28 +53,24 @@ ComplexObject* CreateLetterS(GLuint uniformModel);
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
 /// <returns>A pointer to the complex object representing the letter A</returns>
 ComplexObject* CreateLetterA(GLuint uniformModel);
-
 /// <summary>
 /// Creates the number I using meshes and complex objects.
 /// </summary>
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
 /// <returns>A pointer to the complex object representing the letter I</returns>
 ComplexObject* CreateLetterI(GLuint uniformModel);
-
 /// <summary>
 /// Creates the letter N using meshes and complex objects.
 /// </summary>
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
 /// <returns>A pointer to the complex object representing the letter N</returns>
 ComplexObject* CreateLetterN(GLuint uniformModel);
-
 /// <summary>
 /// Creates the letter R using meshes and complex objects.
 /// </summary>
 /// <param name="uniformModel">The location of the Model Matrix on the GPU</param>
 /// <returns>A pointer to the complex object representing the letter R</returns>
 ComplexObject* CreateLetterR(GLuint uniformModel);
-
 /// <summary>
 /// Creates the letter O using meshes and complex objects.
 /// </summary>
@@ -81,23 +78,28 @@ ComplexObject* CreateLetterR(GLuint uniformModel);
 /// <returns>A pointer to the complex object representing the letter O</returns>
 ComplexObject* CreateLetterO(GLuint uniformModel);
 
+// Shape creation methods
 ComplexObject* CreateCylinder(int sectorCount, float height, float radius);
 std::vector<float> getUnitCircleVertices(int sectorCount);
+IndependentMesh* CreateCube(GLuint modelLocation);
+IndependentMesh* CreateSphere(float radius, int longitudeCount, int latitudeCount, GLuint modelLocation);
 
 void CreateAxes();
 
 /// <summary>
-// Reads keyboard input and sets selectedModel to desired input.
-// </summary>
+/// Reads keyboard input and sets selectedModel to desired input.
+/// </summary>
 void SelectModel();
 
 // Global Variables
 
 const int WIDTH = 1024, HEIGHT = 768;
 std::vector<Mesh*> meshList;
-std::vector<ComplexObject*> objectList;
+std::vector<ComplexObject*> objectList; // List of all objects in the scene
 
-Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 0.5f); // Initialize camera
+// Initialize camera at origin
+Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 0.05f, 0.5f);
+
 Window window;
 
 const float BASE_WORLD_XANGLE = -5.0f;
@@ -124,29 +126,30 @@ int main(int argc, char* argv[])
 	glEnable(GL_CULL_FACE); // Enable backface culling
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	/////////////////////
+	// Object creation //
+	/////////////////////
 
-	// Creating grid
 	createGrid(128);
 	Shader gridShader = Shader("shader.vs", "shader.fs");
 
-	glm::mat4 projection(1.0f);
-	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-
-	// Creating the letters
+	// Creating all 6 letters
 	CreateLetters(&gridShader);
 
 	// Create the axes
 	CreateAxes();
 
-	glm::mat4 model;
+	// Set up projection matrix
+	glm::mat4 projection(1.0f);
+	projection = glm::perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-    // Setup default matrix - Saffia
-    model = glm::mat4(1.0f);
+	// Position letter model at back of grid
+	glm::mat4 model(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.1f, -10.0f));
     model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
     objectList[0]->SetModelMatrix(model, 0);
 
-
+	// Main loop
 	while (!window.getShouldClose())
 	{
 
@@ -154,12 +157,16 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Camera movement
-		camera.pan(window.getKeys(), window.getDeltaX());
-		camera.tilt(window.getKeys(), window.getDeltaY());
-		camera.magnify(window.getKeys(), window.getDeltaY());
-		camera.movementFromKeyboard(window.getKeys());
+		camera.pan(window.getKeys(), window.getDeltaX()); // Using right mouse button
+		camera.tilt(window.getKeys(), window.getDeltaY()); // Using middle mouse button
+		camera.magnify(window.getKeys(), window.getDeltaY()); // Using left mouse button
+		camera.movementFromKeyboard(window.getKeys()); // Move around using shift+IJKL
 
 		gridShader.use();
+
+		//////////////////////////
+		// Misc. keyboard input //
+		//////////////////////////
 
 		// Handling rotations
 		// Rotating the entire world dependent on key presses.
@@ -214,14 +221,13 @@ int main(int argc, char* argv[])
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 		}
 
-        SelectModel();
+        SelectModel(); // Enable selecting a letter to transform
 
 		// Model matrix for the world grid
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, glm::vec3(-10.0f, 0.0f, -10.0f));
 		model = glm::rotate(model, toRadians(0), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
-
 
 		// View matrix
 		glm::mat4 view(1.0f);
@@ -231,24 +237,23 @@ int main(int argc, char* argv[])
 		view = glm::rotate(view, toRadians(180), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = camera.calculateViewMatrix() * view;
 
-
 		// Connect matrices with shaders
 		gridShader.setMatrix4Float("model", &model);
 		gridShader.setMatrix4Float("projection", &projection);
 		gridShader.setMatrix4Float("view", &view);
 
+		///////////////////////
+		// Rendering objects //
+		///////////////////////
+
 		// Drawing the grid
+
 		// Setting the color (yellow)
 		gridShader.setFloat("r", 0.8f);
 		gridShader.setFloat("rg", 0.85f);
 		gridShader.setFloat("rgb", 0.0f);
 		meshList[0]->RenderMesh(GL_LINES);
 
-		// Drawing the letters
-		// Setting color to gray
-		gridShader.setFloat("r", 0.55f);
-		gridShader.setFloat("rg", 0.55f);
-		gridShader.setFloat("rgb", 0.55f);
 
 		// Select a letter to transform
         if(selectedModel == 0){
@@ -269,8 +274,7 @@ int main(int argc, char* argv[])
 		if (selectedModel == 5) {
 			objectList[0]->objectList[5]->Transform(window.getKeys());
 		}
-		objectList[0]->RenderObject(gridShader);
-
+		objectList[0]->RenderObject(gridShader); // Render letters
 
 		// Resetting the matrix
 		model = glm::mat4(1.0f);
@@ -307,7 +311,7 @@ int main(int argc, char* argv[])
 
 		gridShader.free();
 
-		//check and call events and swap buffers
+		// Check and call events and swap buffers
 		window.swapBuffers();
 		glfwPollEvents();
 	}
@@ -380,6 +384,7 @@ void createGrid(int squareCount)
 
 ///////////////////////////////////////////////////////////
 // Source: http://www.songho.ca/opengl/gl_cylinder.html. //
+
 // generate a unit circle on XY-plane
 std::vector<float> getUnitCircleVertices(int sectorCount)
 {
@@ -737,7 +742,7 @@ void CreateLetters(Shader* shader) {
 
 ComplexObject* CreateLetterR(GLuint uniformModel)
 {
-	
+
 	ComplexObject *r = new ComplexObject();
 
 	// Use spheres for the vertical portions
@@ -780,8 +785,6 @@ ComplexObject* CreateLetterR(GLuint uniformModel)
 
 	return r;
 }
-
-
 
 ComplexObject* CreateLetterS(GLuint uniformModel)
 {
