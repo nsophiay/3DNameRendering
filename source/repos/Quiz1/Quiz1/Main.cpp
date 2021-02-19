@@ -19,7 +19,7 @@
 
 // References used:
 // - Cylinder http://www.songho.ca/opengl/gl_cylinder.html#example_cylinder
-// - Sphere
+// - Sphere https://gist.github.com/zwzmzd/0195733fa1210346b00d
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -421,6 +421,89 @@ void CreateCylinder() {
 
 	objectList.push_back(cylinder);
 
+}
+
+IndependentMesh* CreateSphere(int radius, int longitudeCount, int latitudeCount) {
+
+	std::vector<GLfloat> vertices;
+	std::vector<GLuint> indices;
+
+	//////////////////////////////////////////////////////////
+	// Source: http://www.songho.ca/opengl/gl_sphere.html. //
+
+	// Generate vertices
+	float x, y, z, xy;                              // vertex position
+
+	float sectorStep = 2 * glm::pi<float>() / longitudeCount;
+	float stackStep = glm::pi<float>() / latitudeCount;
+	float sectorAngle, stackAngle;
+
+	for (int i = 0; i <= latitudeCount; ++i)
+	{
+		stackAngle = glm::pi<float>() / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+		xy = radius * cosf(stackAngle);             // r * cos(u)
+		z = radius * sinf(stackAngle);              // r * sin(u)
+
+													// add (sectorCount+1) vertices per stack
+													// the first and last vertices have same position and normal, but different tex coords
+		for (int j = 0; j <= longitudeCount; ++j)
+		{
+			sectorAngle = j * sectorStep;           // starting from 0 to 2pi
+
+													// vertex position (x, y, z)
+			x = xy * cosf(sectorAngle);             // r * cos(u) * cos(v)
+			y = xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
+			vertices.push_back(x);
+			vertices.push_back(y);
+			vertices.push_back(z);
+		}
+	}
+
+	// Generate indices
+	std::vector<int> lineIndices;
+	int k1, k2;
+	for (int i = 0; i < latitudeCount; ++i)
+	{
+		k1 = i * (longitudeCount + 1);     // beginning of current stack
+		k2 = k1 + longitudeCount + 1;      // beginning of next stack
+
+		for (int j = 0; j < longitudeCount; ++j, ++k1, ++k2)
+		{
+			// 2 triangles per sector excluding first and last stacks
+			// k1 => k2 => k1+1
+			if (i != 0)
+			{
+				indices.push_back(k1);
+				indices.push_back(k2);
+				indices.push_back(k1 + 1);
+			}
+
+			// k1+1 => k2 => k2+1
+			if (i != (latitudeCount - 1))
+			{
+				indices.push_back(k1 + 1);
+				indices.push_back(k2);
+				indices.push_back(k2 + 1);
+			}
+
+			// store indices for lines
+			// vertical lines for all stacks, k1 => k2
+			lineIndices.push_back(k1);
+			lineIndices.push_back(k2);
+			if (i != 0)  // horizontal lines except 1st stack, k1 => k+1
+			{
+				lineIndices.push_back(k1);
+				lineIndices.push_back(k1 + 1);
+			}
+		}
+	}
+	//////////////////////////////////////////////////////////
+
+	IndependentMesh* sphere = new IndependentMesh();
+	sphere->CreateMesh(&vertices[0], &indices[0], vertices.size(), indices.size());
+	
+	return sphere;
+	
 }
 
 
@@ -1216,11 +1299,10 @@ ComplexObject* CreateLetterS(GLuint uniformModel)
 	// Creating the base 
 
 	glm::mat4 partModel(1.0f);
-	partModel = glm::scale(partModel, glm::vec3(2.75f, 0.5f, 1.0f));
-	IndependentMesh* cubeS1 = new IndependentMesh();
-	cubeS1->CreateMesh(vertices, indices, 24, 36);
-	cubeS1->SetModelMatrix(partModel, uniformModel);
-	s->meshList.push_back(cubeS1);
+	partModel = glm::scale(partModel, glm::vec3(1.0f, 0.5f, 0.25f));
+	IndependentMesh* sphereS1 = CreateSphere(1.0, 40, 40);
+	sphereS1->SetModelMatrix(partModel, uniformModel);
+	s->meshList.push_back(sphereS1);
 
 	partModel = glm::translate(partModel, glm::vec3(0.0f, 8.0f, 0.0f));
 	IndependentMesh *cubeS2 = new IndependentMesh();

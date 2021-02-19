@@ -103,7 +103,6 @@ void Mesh::CreateCylinder(Cylinder cylinder) {
 		GL_STATIC_DRAW);                     // usage
 
 											 // copy index data to VBO
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 
 	// set attrib arrays with stride and offset
