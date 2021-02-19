@@ -81,6 +81,12 @@ class ComplexObject
 		/// <param name="b">Sets the blue value.</param>
 		void SetColour(GLfloat r, GLfloat g, GLfloat b);
 
+		/// <summary>
+		/// Sets the colour of the object.
+		/// </summary>
+		/// <param name="hex">Sets the RGB value from a hex colour.</param>
+		void SetColour(int hex);
+
         /// <summary>
         // Translates model.
         // </summary>
@@ -111,6 +117,13 @@ class ComplexObject
         // </summary>
         // <param name="keys">Array of pressed keys.</param>
         void Transform(bool* keys);
+
+		/// <summary>
+		/// Converts a hex colour code into RGB
+		/// </summary>
+		/// <param name="hexValue">The colour in hex.</param>
+		/// <returns>An array of 3 floats representing the red, green, and blue values.</returns>
+		float* hexToRGB(int hexValue);
 
 	private:
 		/// <summary>

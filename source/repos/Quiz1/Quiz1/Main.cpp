@@ -15,7 +15,6 @@
 #include "Window.h"
 #include "IndependentMesh.h"
 #include "ComplexObject.h"
-#include "Cylinder.h"
 
 // References used:
 // - Cylinder http://www.songho.ca/opengl/gl_cylinder.html#example_cylinder
@@ -121,10 +120,10 @@ int main(int argc, char* argv[])
 	window = Window(WIDTH, HEIGHT);
 	window.initialise();
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST); // Enable depth testing
+	glEnable(GL_CULL_FACE); // Enable backface culling
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	glClearColor(0.0f, 0.52f, 0.52f, 1.0f);
 
 	// Creating grid
 	createGrid(128);
@@ -151,8 +150,7 @@ int main(int argc, char* argv[])
 	while (!window.getShouldClose())
 	{
 
-		// rendering commands
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.52f, 0.52f, 1.0f); // Set background colour to teal
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Camera movement
@@ -252,8 +250,7 @@ int main(int argc, char* argv[])
 		gridShader.setFloat("rg", 0.55f);
 		gridShader.setFloat("rgb", 0.55f);
 
-		// Saffia
-        // If 3 is pressed, transform model with keyboard
+		// Select a letter to transform
         if(selectedModel == 0){
             objectList[0]->objectList[0]->Transform(window.getKeys());
         }
@@ -279,27 +276,34 @@ int main(int argc, char* argv[])
 		model = glm::mat4(1.0f);
 		gridShader.setMatrix4Float("model", &model);
 
-		// Render the set of axis
+		///////////
+		// Axes ///
+		///////////
 
+		// Move axes a bit to the left so you can see my letters
+		model = glm::translate(model, glm::vec3(-0.12f, 0.0f, 0.0f));
+		objectList[1]->SetModelMatrix(model, 0);
+
+		// X-axis
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(1.25f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		objectList[1]->objectList[0]->SetColour(1.0f, 0.0f, 0.0f); // Red
 		objectList[1]->objectList[0]->SetModelMatrix(model, 0);
-		objectList[1]->objectList[0]->RenderObject(gridShader);
 
+		// Y-axis
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, glm::vec3(1.0f, 0.5f, 1.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 1.25f, 0.0f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		objectList[1]->objectList[1]->SetColour(0.0f, 1.0f, 0.0f); // Green
 		objectList[1]->objectList[1]->SetModelMatrix(model, 0);
-		objectList[1]->objectList[1]->RenderObject(gridShader);
 
-		model = glm::mat4(1.0f);
+		// Z-axis
 		objectList[1]->objectList[2]->SetColour(0.0f, 0.0f, 1.0f); // Blue
-		objectList[1]->objectList[2]->SetModelMatrix(model, 0);
-		objectList[1]->objectList[2]->RenderObject(gridShader);
+
+		// Render entire set of axes
+		objectList[1]->RenderObject(gridShader);
 
 		gridShader.free();
 
@@ -406,6 +410,7 @@ ComplexObject* CreateCylinder(int sectorCount, float height, float radius) {
 
 	// get unit circle vectors on XY-plane
 	std::vector<float> unitVertices = getUnitCircleVertices(sectorCount);
+	radius = radius / 2;
 
 	// put side vertices to arrays
 	for (int i = 0; i < 2; ++i)
@@ -688,33 +693,33 @@ void CreateLetters(Shader* shader) {
 
 	model = glm::translate(model, glm::vec3(0.5f, 30.0f, 0.0f));
 	letterS->SetModelMatrix(model, modelLocation);
-	letterS->SetColour(0.96f, 1.0f, 0.0f); // Yellow
+	letterS->SetColour(0x46065e); // Set colour to dark purple using a hex code
 	
    	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.5f, 24.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.75f, 0.75f, 0.75f));
 	letterA->SetModelMatrix(model, modelLocation);
-	letterA->SetColour(1.0f, 0.8f, 0.0f); // Gold
+	letterA->SetColour(0x65076c); // Purple
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 18.0f, 0.0f));
 	letterN->SetModelMatrix(model, modelLocation);
-	letterN->SetColour(1.0f, 0.6f, 0.0f); // Orange
+	letterN->SetColour(0x860877); // Magenta
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.5f, 12.0f, 0.0f));
 	letterI->SetModelMatrix(model, modelLocation);
-	letterI->SetColour(0.98f, 0.39f, 0.0f); // Dark Orange
+	letterI->SetColour(0xa70b81); // Pink
 	
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 6.5f, 0.0f));
 	letterR->SetModelMatrix(model, modelLocation);
-	letterR->SetColour(0.92f, 0.07f, 0.07f); // Red
+	letterR->SetColour(0xc81188); // Pink
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
 	letterO->SetModelMatrix(model, modelLocation);
-	letterO->SetColour(0.71f, 0.0f, 0.0f); // Dark red
+	letterO->SetColour(0xE7129D); // Light pink
 	
 	ComplexObject* SaffiaNameAndID = new ComplexObject();
 
@@ -1001,7 +1006,7 @@ void CreateAxes()
 
 	ComplexObject *axes = new ComplexObject();
 
-	// Create 3 cylinders, one for each axis
+	// Create 3 cylinders, one for each axis, with length 2.5 and diameter 0.25
 	ComplexObject *x = CreateCylinder(5, 2.5f, 0.125f);
 	ComplexObject *y = CreateCylinder(5, 2.5f, 0.125f);
 	ComplexObject *z = CreateCylinder(5, 2.5f, 0.125f);

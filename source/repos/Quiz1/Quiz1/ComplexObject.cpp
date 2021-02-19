@@ -185,6 +185,14 @@ void ComplexObject::SetColour(GLfloat r, GLfloat g, GLfloat b) {
 
 }
 
+void ComplexObject::SetColour(int hex) {
+
+	float* rgb = hexToRGB(hex);
+	red = rgb[0];
+	green = rgb[1];
+	blue = rgb[2];
+}
+
 void ComplexObject::ClearObject()
 {
 	// Clears the meshlist
@@ -299,4 +307,20 @@ void ComplexObject::Transform(bool* keys)
     if(keys[GLFW_KEY_J] && !keys[GLFW_KEY_LEFT_SHIFT]){
         ScaleModel(0.99f, 0.99f, 0.99f);
     }
+}
+
+float* ComplexObject::hexToRGB(int hexValue) {
+
+	float rgb[3];
+
+	/////////////////////////////////////////////////////
+	//// Source: https://gist.github.com/bert/998020 ////
+
+	rgb[0] = ((hexValue >> 16) & 0xFF) / 255.0; // Extract the RR byte
+	rgb[1] = ((hexValue >> 8) & 0xFF) / 255.0; // Extract the GG byte
+	rgb[2] = ((hexValue) & 0xFF) / 255.0; // Extract the BB byte
+
+	/////////////////////////////////////////////////////
+
+	return rgb;
 }
